@@ -6,14 +6,13 @@ import (
 	"io"
 	"os"
 	"runtime"
-	"syscall"
 
+	isatty "github.com/mattn/go-isatty"
 	"github.com/spf13/cobra"
 	"github.com/spiegel-im-spiegel/gocli"
 	"github.com/spiegel-im-spiegel/mklink"
 	"github.com/spiegel-im-spiegel/mklink/cli/mklink/interactive"
 	"github.com/spiegel-im-spiegel/mklink/cli/mklink/makelink"
-	"golang.org/x/crypto/ssh/terminal"
 )
 
 var (
@@ -75,7 +74,7 @@ var rootCmd = &cobra.Command{
 					return err
 				}
 			}
-		} else if terminal.IsTerminal(int(syscall.Stdin)) {
+		} else if isatty.IsTerminal(os.Stdin.Fd()) {
 			if interactiveFlag {
 				interactive.New(style, log).Run()
 			}
