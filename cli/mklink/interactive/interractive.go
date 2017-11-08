@@ -12,7 +12,7 @@ import (
 
 const (
 	header = "Press Ctrl+C to stop"
-	prompt = "mklimk> "
+	prompt = "mklink> "
 )
 
 //Context class is context for making link
