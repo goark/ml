@@ -2,8 +2,10 @@ package makelink
 
 import (
 	"bytes"
+	"fmt"
 	"io"
 
+	"github.com/atotto/clipboard"
 	"github.com/spiegel-im-spiegel/mklink"
 )
 
@@ -27,12 +29,12 @@ func (c *Context) MakeLink(url string) error {
 	}
 
 	r := lnk.Encode(c.linkStyle)
-	if c.log == nil {
-		io.Copy(c.writer, r)
-	} else {
-		buf := new(bytes.Buffer)
-		io.Copy(c.writer, io.TeeReader(r, buf))
-		io.Copy(c.log, buf)
+	buf := new(bytes.Buffer)
+	io.Copy(c.writer, io.TeeReader(r, buf))
+	strLink := buf.String()
+	clipboard.WriteAll(strLink)
+	if c.log != nil {
+		fmt.Fprint(c.log, strLink)
 	}
 	return nil
 }
