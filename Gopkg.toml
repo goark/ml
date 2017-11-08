@@ -50,3 +50,7 @@ ignored = [
 [[constraint]]
   name = "golang.org/x/crypto"
   branch = "master"
+
+[[constraint]]
+  name = "github.com/atotto/clipboard"
+  branch = "master"

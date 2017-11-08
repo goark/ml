@@ -14,6 +14,12 @@
   revision = "349dd0209470eabd9514242c688c403c0926d266"
 
 [[projects]]
+  branch = "master"
+  name = "github.com/atotto/clipboard"
+  packages = ["."]
+  revision = "bb272b845f1112e10117e3e45ce39f690c0001ad"
+
+[[projects]]
   name = "github.com/inconshreveable/mousetrap"
   packages = ["."]
   revision = "76626ae9c91c4f2a10f34cad8ce83ea42c93bb75"
@@ -64,6 +70,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "0c2929326205c963709a85ae86d895ea8e9a4325d6a351137c6cb03983d0dda9"
+  inputs-digest = "443042be7cdde940bd0d49f670a8c7ae1d33998b395f15b9e17cce791b828734"
   solver-name = "gps-cdcl"
   solver-version = 1
