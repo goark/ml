@@ -1,5 +1,6 @@
 # [mklink] -- Make Link with Markdown Format
 
+[![Build Status](https://travis-ci.org/spiegel-im-spiegel/mklink.svg?branch=master)](https://travis-ci.org/spiegel-im-spiegel/mklink)
 [![GitHub license](https://img.shields.io/badge/license-Apache%202-blue.svg)](https://raw.githubusercontent.com/spiegel-im-spiegel/mklink/master/LICENSE)
 
 ## Install
