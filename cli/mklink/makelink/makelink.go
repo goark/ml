@@ -35,12 +35,13 @@ func (c *Context) MakeLink(url string) error {
 
 	buf := new(bytes.Buffer)
 	io.Copy(c.writer, io.TeeReader(lnk.Encode(c.linkStyle), buf))
+	fmt.Fprintln(c.writer)
 	strLink := buf.String()
 	if c.clipbrdFlag {
 		clipboard.WriteAll(strLink)
 	}
 	if c.log != nil {
-		fmt.Fprint(c.log, strLink)
+		fmt.Fprintln(c.log, strLink)
 	}
 	return nil
 }

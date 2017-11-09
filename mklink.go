@@ -80,15 +80,18 @@ func (lnk *Link) Encode(t Style) io.Reader {
 	buf := new(bytes.Buffer)
 	switch t {
 	case StyleMarkdown:
-		fmt.Fprintf(buf, "[%s](%s)\n", lnk.TitleName(), lnk.Location)
+		fmt.Fprintf(buf, "[%s](%s)", lnk.TitleName(), lnk.Location)
 	case StyleWiki:
-		fmt.Fprintf(buf, "[%s %s]\n", lnk.Location, lnk.TitleName())
+		fmt.Fprintf(buf, "[%s %s]", lnk.Location, lnk.TitleName())
 	case StyleHTML:
-		fmt.Fprintf(buf, "<a href=\"%s\">%s</a>\n", lnk.Location, lnk.TitleName())
+		fmt.Fprintf(buf, "<a href=\"%s\">%s</a>", lnk.Location, lnk.TitleName())
 	case StyleCSV:
-		fmt.Fprintf(buf, "\"%s\",\"%s\",\"%s\",\"%s\"\n", lnk.URL, lnk.Location, strings.Replace(lnk.Title, "\"", "\"\"", -1), strings.Replace(lnk.Description, "\"", "\"\"", -1))
+		fmt.Fprintf(buf, "\"%s\",\"%s\",\"%s\",\"%s\"", escapeQuoteCsv(lnk.URL), escapeQuoteCsv(lnk.Location), escapeQuoteCsv(lnk.Title), escapeQuoteCsv(lnk.Description))
 	}
 	return buf
+}
+func escapeQuoteCsv(s string) string {
+	return strings.Replace(s, "\"", "\"\"", -1)
 }
 
 func (lnk *Link) String() string {

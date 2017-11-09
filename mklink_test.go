@@ -9,10 +9,10 @@ import (
 )
 
 var typesTests2 = []typesTestCase{
-	{"[GitHub - spiegel-im-spiegel/mklink: Make Link with Markdown Format](https://github.com/spiegel-im-spiegel/mklink)\n", StyleMarkdown},
-	{"[https://github.com/spiegel-im-spiegel/mklink GitHub - spiegel-im-spiegel/mklink: Make Link with Markdown Format]\n", StyleWiki},
-	{"<a href=\"https://github.com/spiegel-im-spiegel/mklink\">GitHub - spiegel-im-spiegel/mklink: Make Link with Markdown Format</a>\n", StyleHTML},
-	{"\"https://git.io/vFR5M\",\"https://github.com/spiegel-im-spiegel/mklink\",\"GitHub - spiegel-im-spiegel/mklink: Make Link with Markdown Format\",\"mklink - Make Link with Markdown Format\"\n", StyleCSV},
+	{"[GitHub - spiegel-im-spiegel/mklink: Make Link with Markdown Format](https://github.com/spiegel-im-spiegel/mklink)", StyleMarkdown},
+	{"[https://github.com/spiegel-im-spiegel/mklink GitHub - spiegel-im-spiegel/mklink: Make Link with Markdown Format]", StyleWiki},
+	{"<a href=\"https://github.com/spiegel-im-spiegel/mklink\">GitHub - spiegel-im-spiegel/mklink: Make Link with Markdown Format</a>", StyleHTML},
+	{"\"https://git.io/vFR5M\",\"https://github.com/spiegel-im-spiegel/mklink\",\"GitHub - spiegel-im-spiegel/mklink: Make Link with Markdown Format\",\"mklink - Make Link with Markdown Format\"", StyleCSV},
 	{"", StyleUnknown},
 }
 
