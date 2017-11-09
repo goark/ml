@@ -59,6 +59,9 @@ func (lnk *Link) JSON() (io.Reader, error) {
 
 //TitleName returns string of title name
 func (lnk *Link) TitleName() string {
+	if lnk == nil {
+		return ""
+	}
 	if len(lnk.Title) > 0 {
 		return lnk.Title
 	}
@@ -67,6 +70,9 @@ func (lnk *Link) TitleName() string {
 
 //Encode returns string (io.Reader) with other style
 func (lnk *Link) Encode(t Style) io.Reader {
+	if lnk == nil {
+		return ioutil.NopCloser(bytes.NewReader(nil))
+	}
 	buf := new(bytes.Buffer)
 	switch t {
 	case StyleMarkdown:
@@ -82,8 +88,9 @@ func (lnk *Link) Encode(t Style) io.Reader {
 }
 
 func (lnk *Link) String() string {
+	if lnk == nil {
+		return ""
+	}
 	r, _ := lnk.JSON()
-	buf := new(bytes.Buffer)
-	io.Copy(buf, r)
-	return buf.String()
+	return fmt.Sprint(r)
 }
