@@ -22,8 +22,8 @@ type Link struct {
 
 //New returns new Link instance
 func New(url string) (*Link, error) {
-	link := &Link{URL: url}
-	doc, err := goquery.NewDocument(url)
+	link := &Link{URL: strings.Trim(url, "\t \n")}
+	doc, err := goquery.NewDocument(link.URL)
 	if err != nil {
 		return link, err
 	}
@@ -31,11 +31,11 @@ func New(url string) (*Link, error) {
 
 	doc.Find("head").Each(func(_ int, s *goquery.Selection) {
 		s.Find("title").Each(func(_ int, s *goquery.Selection) {
-			link.Title = s.Text()
+			link.Title = strings.Trim(s.Text(), "\t \n")
 		})
 		s.Find("meta[name='description']").Each(func(_ int, s *goquery.Selection) {
 			if v, ok := s.Attr("content"); ok {
-				link.Description = v
+				link.Description = strings.Trim(v, "\t \n")
 			}
 		})
 	})
