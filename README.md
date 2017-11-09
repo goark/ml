@@ -65,7 +65,7 @@ $ cat log.txt
 
 ```
 $ mklink -i
-Press Ctrl+C to stop
+Input 'q' or 'quit' to stop
 mklimk> https://git.io/vFR5M
 [GitHub - spiegel-im-spiegel/mklink: Make Link with Markdown Format](https://github.com/spiegel-im-spiegel/mklink)
 mklimk>
