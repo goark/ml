@@ -33,9 +33,8 @@ func (c *Context) MakeLink(url string) error {
 		return err
 	}
 
-	r := lnk.Encode(c.linkStyle)
 	buf := new(bytes.Buffer)
-	io.Copy(c.writer, io.TeeReader(r, buf))
+	io.Copy(c.writer, io.TeeReader(lnk.Encode(c.linkStyle), buf))
 	strLink := buf.String()
 	if c.clipbrdFlag {
 		clipboard.WriteAll(strLink)

@@ -22,7 +22,7 @@ type Link struct {
 
 //New returns new Link instance
 func New(url string) (*Link, error) {
-	link := &Link{URL: strings.Trim(url, "\t \n")}
+	link := &Link{URL: trimString(url)}
 	doc, err := goquery.NewDocument(link.URL)
 	if err != nil {
 		return link, err
@@ -31,16 +31,20 @@ func New(url string) (*Link, error) {
 
 	doc.Find("head").Each(func(_ int, s *goquery.Selection) {
 		s.Find("title").Each(func(_ int, s *goquery.Selection) {
-			link.Title = strings.Trim(s.Text(), "\t \n")
+			link.Title = trimString(s.Text())
 		})
 		s.Find("meta[name='description']").Each(func(_ int, s *goquery.Selection) {
 			if v, ok := s.Attr("content"); ok {
-				link.Description = strings.Trim(v, "\t \n")
+				link.Description = trimString(v)
 			}
 		})
 	})
 
 	return link, nil
+}
+func trimString(s string) string {
+	s = strings.Replace(s, "\n", " ", -1)
+	return strings.Trim(s, "\t ")
 }
 
 //JSON returns string (io.Reader) with JSON format
