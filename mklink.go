@@ -22,8 +22,8 @@ type Link struct {
 
 //New returns new Link instance
 func New(url string) (*Link, error) {
-	link := &Link{URL: url}
-	doc, err := goquery.NewDocument(url)
+	link := &Link{URL: strings.Trim(url, "\t \n")}
+	doc, err := goquery.NewDocument(link.URL)
 	if err != nil {
 		return link, err
 	}
@@ -31,11 +31,11 @@ func New(url string) (*Link, error) {
 
 	doc.Find("head").Each(func(_ int, s *goquery.Selection) {
 		s.Find("title").Each(func(_ int, s *goquery.Selection) {
-			link.Title = s.Text()
+			link.Title = strings.Trim(s.Text(), "\t \n")
 		})
 		s.Find("meta[name='description']").Each(func(_ int, s *goquery.Selection) {
 			if v, ok := s.Attr("content"); ok {
-				link.Description = v
+				link.Description = strings.Trim(v, "\t \n")
 			}
 		})
 	})
@@ -59,6 +59,9 @@ func (lnk *Link) JSON() (io.Reader, error) {
 
 //TitleName returns string of title name
 func (lnk *Link) TitleName() string {
+	if lnk == nil {
+		return ""
+	}
 	if len(lnk.Title) > 0 {
 		return lnk.Title
 	}
@@ -67,6 +70,9 @@ func (lnk *Link) TitleName() string {
 
 //Encode returns string (io.Reader) with other style
 func (lnk *Link) Encode(t Style) io.Reader {
+	if lnk == nil {
+		return ioutil.NopCloser(bytes.NewReader(nil))
+	}
 	buf := new(bytes.Buffer)
 	switch t {
 	case StyleMarkdown:
@@ -82,8 +88,9 @@ func (lnk *Link) Encode(t Style) io.Reader {
 }
 
 func (lnk *Link) String() string {
+	if lnk == nil {
+		return ""
+	}
 	r, _ := lnk.JSON()
-	buf := new(bytes.Buffer)
-	io.Copy(buf, r)
-	return buf.String()
+	return fmt.Sprint(r)
 }

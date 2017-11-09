@@ -7,7 +7,6 @@ import (
 	"os"
 	"runtime"
 
-	isatty "github.com/mattn/go-isatty"
 	"github.com/spf13/cobra"
 	"github.com/spiegel-im-spiegel/gocli"
 	"github.com/spiegel-im-spiegel/mklink"
@@ -65,8 +64,16 @@ var rootCmd = &cobra.Command{
 			defer file.Close()
 			log = file
 		}
-		lnk := makelink.New(style, cui.Writer(), log)
 
+		if interactiveFlag {
+			i, err := interactive.New(style, log)
+			if err != nil {
+				return err
+			}
+			return i.Run()
+		}
+
+		lnk := makelink.New(style, cui.Writer(), log)
 		if len(args) > 0 {
 			for _, arg := range args {
 				err := lnk.MakeLink(arg)
@@ -74,11 +81,6 @@ var rootCmd = &cobra.Command{
 					return err
 				}
 			}
-		} else if isatty.IsTerminal(os.Stdin.Fd()) {
-			if interactiveFlag {
-				interactive.New(style, log).Run()
-			}
-			return nil
 		} else {
 			scanner := bufio.NewScanner(cui.Reader())
 			for scanner.Scan() {
