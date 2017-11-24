@@ -7,6 +7,7 @@ import (
 	"io"
 	"io/ioutil"
 	"strings"
+	"unicode/utf8"
 
 	"github.com/PuerkitoBio/goquery"
 	"github.com/pkg/errors"
@@ -31,11 +32,16 @@ func New(url string) (*Link, error) {
 
 	doc.Find("head").Each(func(_ int, s *goquery.Selection) {
 		s.Find("title").Each(func(_ int, s *goquery.Selection) {
-			link.Title = trimString(s.Text())
+			t := s.Text()
+			if utf8.ValidString(t) {
+				link.Title = trimString(t)
+			}
 		})
 		s.Find("meta[name='description']").Each(func(_ int, s *goquery.Selection) {
 			if v, ok := s.Attr("content"); ok {
-				link.Description = trimString(v)
+				if utf8.ValidString(v) {
+					link.Description = trimString(v)
+				}
 			}
 		})
 	})

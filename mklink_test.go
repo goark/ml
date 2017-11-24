@@ -29,6 +29,27 @@ func TestEncode(t *testing.T) {
 	}
 }
 
+var typesTests3 = []typesTestCase{
+	{"[https://git.io/vFR5M](https://github.com/spiegel-im-spiegel/mklink)", StyleMarkdown},
+	{"[https://github.com/spiegel-im-spiegel/mklink https://git.io/vFR5M]", StyleWiki},
+	{"<a href=\"https://github.com/spiegel-im-spiegel/mklink\">https://git.io/vFR5M</a>", StyleHTML},
+	{"\"https://git.io/vFR5M\",\"https://github.com/spiegel-im-spiegel/mklink\",\"\",\"\"", StyleCSV},
+	{"", StyleUnknown},
+}
+
+func TestEncodeNoUTF8(t *testing.T) {
+	lnk := &Link{URL: "https://git.io/vFR5M", Location: "https://github.com/spiegel-im-spiegel/mklink", Title: "", Description: ""}
+	for _, tst := range typesTests3 {
+		r := lnk.Encode(tst.t)
+		buf := new(bytes.Buffer)
+		io.Copy(buf, r)
+		str := buf.String()
+		if str != tst.name {
+			t.Errorf("Encode(%v)  = \"%v\", want \"%v\".", tst.t, str, tst.name)
+		}
+	}
+}
+
 func TestString(t *testing.T) {
 	lnk := &Link{URL: "https://git.io/vFR5M", Location: "https://github.com/spiegel-im-spiegel/mklink", Title: "GitHub - spiegel-im-spiegel/mklink: Make Link with Markdown Format", Description: "mklink - Make Link with Markdown Format"}
 	str := lnk.String()
