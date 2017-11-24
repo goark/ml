@@ -57,6 +57,9 @@ func (c *Context) Run() error {
 		if !ok {
 			break
 		}
+		if len(res) == 0 {
+			continue
+		}
 		if err := c.MakeLink(res); err != nil {
 			fmt.Fprintln(c.writer, err)
 		}
