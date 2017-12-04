@@ -32,15 +32,16 @@ func New(url string) (*Link, error) {
 
 	doc.Find("head").Each(func(_ int, s *goquery.Selection) {
 		s.Find("title").Each(func(_ int, s *goquery.Selection) {
-			t := s.Text()
-			if utf8.ValidString(t) {
+			t := ToUTF8([]byte(s.Text()))
+			if len(t) > 0 && utf8.ValidString(t) {
 				link.Title = trimString(t)
 			}
 		})
 		s.Find("meta[name='description']").Each(func(_ int, s *goquery.Selection) {
 			if v, ok := s.Attr("content"); ok {
-				if utf8.ValidString(v) {
-					link.Description = trimString(v)
+				d := ToUTF8([]byte(v))
+				if len(d) > 0 && utf8.ValidString(d) {
+					link.Description = trimString(d)
 				}
 			}
 		})

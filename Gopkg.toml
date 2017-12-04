@@ -54,3 +54,11 @@ ignored = [
 [[constraint]]
   name = "github.com/atotto/clipboard"
   branch = "master"
+
+[[constraint]]
+  name = "github.com/saintfish/chardet"
+  branch = "master"
+
+[[constraint]]
+  name = 	"golang.org/x/text"
+  branch = "master"
