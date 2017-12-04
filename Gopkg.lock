@@ -38,6 +38,12 @@
   version = "v0.8.0"
 
 [[projects]]
+  branch = "master"
+  name = "github.com/saintfish/chardet"
+  packages = ["."]
+  revision = "3af4cd4741ca4f3eb0c407c034571a6fb0ea529c"
+
+[[projects]]
   name = "github.com/spf13/cobra"
   packages = ["."]
   revision = "7b2c5ac9fc04fc5efafb60700713d4fa609b777b"
@@ -67,9 +73,15 @@
   packages = ["unix"]
   revision = "75813c647272dd855bda156405bf844a5414f5bf"
 
+[[projects]]
+  branch = "master"
+  name = "golang.org/x/text"
+  packages = ["encoding","encoding/internal","encoding/internal/identifier","encoding/japanese","internal/gen","transform","unicode/cldr"]
+  revision = "75cc3cad82b5f47d3fb229ddda8c5167da14f294"
+
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "30c51b72b39edcaf014ce774692d9b3e90db85c627a7db67589230d137f57eef"
+  inputs-digest = "f5b4f0260ca993878fb958e8cd706e3762b4b84c4435dab35d75bfe2260366ff"
   solver-name = "gps-cdcl"
   solver-version = 1
