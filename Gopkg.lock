@@ -58,30 +58,36 @@
 [[projects]]
   name = "github.com/spiegel-im-spiegel/gocli"
   packages = ["."]
-  revision = "663c5d5d717eb8076219a392d2dd2b15e35a17bd"
-  version = "v0.4.3"
+  revision = "d80ff117c2cb7e41be5605ede6291c43d7b2e397"
+  version = "v0.4.4"
+
+[[projects]]
+  name = "github.com/spiegel-im-spiegel/text"
+  packages = ["decode","detect"]
+  revision = "e9ec92711bcb137393b35a62997b36c33b729e67"
+  version = "v0.1.0"
 
 [[projects]]
   branch = "master"
   name = "golang.org/x/net"
   packages = ["html","html/atom"]
-  revision = "a337091b0525af65de94df2eb7e98bd9962dcbe2"
+  revision = "a8b9294777976932365dabb6640cf1468d95c70f"
 
 [[projects]]
   branch = "master"
   name = "golang.org/x/sys"
   packages = ["unix"]
-  revision = "75813c647272dd855bda156405bf844a5414f5bf"
+  revision = "8b4580aae2a0dd0c231a45d3ccb8434ff533b840"
 
 [[projects]]
   branch = "master"
   name = "golang.org/x/text"
-  packages = ["encoding","encoding/internal","encoding/internal/identifier","encoding/japanese","internal/gen","transform","unicode/cldr"]
-  revision = "75cc3cad82b5f47d3fb229ddda8c5167da14f294"
+  packages = ["encoding","encoding/internal","encoding/internal/identifier","encoding/japanese","encoding/korean","encoding/simplifiedchinese","encoding/traditionalchinese","internal/gen","transform","unicode/cldr"]
+  revision = "556d234e9c5239918de4d1fe247d1fe004e71764"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "f5b4f0260ca993878fb958e8cd706e3762b4b84c4435dab35d75bfe2260366ff"
+  inputs-digest = "7922580118df09ac14e64ca4911c7f898c9970a7c7a929bce1a4d3d5aba89999"
   solver-name = "gps-cdcl"
   solver-version = 1
