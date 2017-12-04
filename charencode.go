@@ -81,8 +81,7 @@ func ToUTF8(body []byte) string {
 	default:
 		return ""
 	}
-	r := transform.NewReader(bytes.NewReader(body), trans)
 	buf := new(bytes.Buffer)
-	io.Copy(buf, r)
+	io.Copy(buf, transform.NewReader(bytes.NewReader(body), trans))
 	return buf.String()
 }
