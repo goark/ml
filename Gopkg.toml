@@ -37,15 +37,19 @@ ignored = [
 
 [[constraint]]
   name = "github.com/spiegel-im-spiegel/gocli"
-  version = "^0.4.0"
+  version = "~0.4.0"
+
+[[constraint]]
+  name = "github.com/spiegel-im-spiegel/text"
+  version = "~0.1.0"
 
 [[constraint]]
   name = "github.com/pkg/errors"
-  version = "^0.8.0"
+  version = "~0.8.0"
 
 [[constraint]]
   name = "github.com/PuerkitoBio/goquery"
-  version = "^1.1.0"
+  version = "~1.1.0"
 
 [[constraint]]
   name = "github.com/mattn/go-isatty"
@@ -53,12 +57,4 @@ ignored = [
 
 [[constraint]]
   name = "github.com/atotto/clipboard"
-  branch = "master"
-
-[[constraint]]
-  name = "github.com/saintfish/chardet"
-  branch = "master"
-
-[[constraint]]
-  name = 	"golang.org/x/text"
   branch = "master"
