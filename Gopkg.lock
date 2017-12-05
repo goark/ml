@@ -26,6 +26,12 @@
   version = "v1.0"
 
 [[projects]]
+  name = "github.com/mattn/go-encoding"
+  packages = ["."]
+  revision = "a934bb263954cae0fe21b222a60076d4e344c149"
+  version = "v0.0.2"
+
+[[projects]]
   name = "github.com/mattn/go-isatty"
   packages = ["."]
   revision = "0360b2af4f38e8d38c7fce2a9f4e702702d73a39"
@@ -36,12 +42,6 @@
   packages = ["."]
   revision = "645ef00459ed84a119197bfb8d8205042c6df63d"
   version = "v0.8.0"
-
-[[projects]]
-  branch = "master"
-  name = "github.com/saintfish/chardet"
-  packages = ["."]
-  revision = "3af4cd4741ca4f3eb0c407c034571a6fb0ea529c"
 
 [[projects]]
   name = "github.com/spf13/cobra"
@@ -62,15 +62,9 @@
   version = "v0.4.4"
 
 [[projects]]
-  name = "github.com/spiegel-im-spiegel/text"
-  packages = ["decode","detect"]
-  revision = "e9ec92711bcb137393b35a62997b36c33b729e67"
-  version = "v0.1.0"
-
-[[projects]]
   branch = "master"
   name = "golang.org/x/net"
-  packages = ["html","html/atom"]
+  packages = ["html","html/atom","html/charset"]
   revision = "a8b9294777976932365dabb6640cf1468d95c70f"
 
 [[projects]]
@@ -82,12 +76,12 @@
 [[projects]]
   branch = "master"
   name = "golang.org/x/text"
-  packages = ["encoding","encoding/internal","encoding/internal/identifier","encoding/japanese","encoding/korean","encoding/simplifiedchinese","encoding/traditionalchinese","internal/gen","transform","unicode/cldr"]
+  packages = ["encoding","encoding/charmap","encoding/htmlindex","encoding/internal","encoding/internal/identifier","encoding/japanese","encoding/korean","encoding/simplifiedchinese","encoding/traditionalchinese","encoding/unicode","internal/gen","internal/tag","internal/utf8internal","language","runes","transform","unicode/cldr"]
   revision = "556d234e9c5239918de4d1fe247d1fe004e71764"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "227cf7889bfd61f47873d26bda340822a361887c81b57d145b375704cc77d143"
+  inputs-digest = "43ad2649e06c0e56eb5256726e1afc9cf33a826df27fa9c08691c5340fa2aa03"
   solver-name = "gps-cdcl"
   solver-version = 1

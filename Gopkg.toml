@@ -20,17 +20,6 @@
 #  name = "github.com/x/y"
 #  version = "2.4.0"
 
-ignored = [
-  "github.com/cpuguy83/go-md2man/md2man",
-  "github.com/mitchellh/go-homedir",
-  "github.com/russross/blackfriday",
-  "github.com/spf13/cobra/cobra",
-  "github.com/spf13/cobra/cobra/cmd",
-  "github.com/spf13/cobra/doc",
-  "github.com/spf13/viper",
-  "gopkg.in/yaml.v2",
-]
-
 [[constraint]]
   name = "github.com/spf13/cobra"
   version = "~0.0.1"
@@ -38,10 +27,6 @@ ignored = [
 [[constraint]]
   name = "github.com/spiegel-im-spiegel/gocli"
   version = "~0.4.0"
-
-[[constraint]]
-  name = "github.com/spiegel-im-spiegel/text"
-  version = "~0.1.0"
 
 [[constraint]]
   name = "github.com/pkg/errors"

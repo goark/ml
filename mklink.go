@@ -1,14 +1,19 @@
 package mklink
 
 import (
+	"bufio"
 	"bytes"
 	"encoding/json"
 	"fmt"
 	"io"
 	"io/ioutil"
+	"net/http"
 	"strings"
 
+	"golang.org/x/net/html/charset"
+
 	"github.com/PuerkitoBio/goquery"
+	encoding "github.com/mattn/go-encoding"
 	"github.com/pkg/errors"
 )
 
@@ -23,24 +28,42 @@ type Link struct {
 //New returns new Link instance
 func New(url string) (*Link, error) {
 	link := &Link{URL: trimString(url)}
-	doc, err := goquery.NewDocument(link.URL)
+	resp, err := http.Get(url)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	link.Location = resp.Request.URL.String()
+
+	br := bufio.NewReader(resp.Body)
+	var r io.Reader = br
+	if data, err2 := br.Peek(1024); err2 == nil { //next 1024 bytes without advancing the reader.
+		enc, name, _ := charset.DetermineEncoding(data, resp.Header.Get("content-type"))
+		if enc != nil {
+			r = enc.NewDecoder().Reader(br)
+		} else if len(name) > 0 {
+			if enc := encoding.GetEncoding(name); enc != nil {
+				r = enc.NewDecoder().Reader(br)
+			}
+		}
+	}
+	doc, err := goquery.NewDocumentFromReader(r)
 	if err != nil {
 		return link, err
 	}
-	link.Location = doc.Url.String()
 
 	doc.Find("head").Each(func(_ int, s *goquery.Selection) {
 		s.Find("title").Each(func(_ int, s *goquery.Selection) {
-			t := ToUTF8([]byte(s.Text()))
+			t := s.Text()
 			if len(t) > 0 {
 				link.Title = trimString(t)
 			}
 		})
 		s.Find("meta[name='description']").Each(func(_ int, s *goquery.Selection) {
 			if v, ok := s.Attr("content"); ok {
-				d := ToUTF8([]byte(v))
-				if len(d) > 0 {
-					link.Description = trimString(d)
+				if len(v) > 0 {
+					link.Description = trimString(v)
 				}
 			}
 		})
@@ -48,6 +71,7 @@ func New(url string) (*Link, error) {
 
 	return link, nil
 }
+
 func trimString(s string) string {
 	s = strings.Replace(s, "\n", " ", -1)
 	return strings.Trim(s, "\t ")
