@@ -38,9 +38,11 @@ func New(url string) (*Link, error) {
 
 	br := bufio.NewReader(resp.Body)
 	var r io.Reader = br
-	//if data, err2 := br.Peek(1024); err2 == nil { //next 1024 bytes without advancing the reader.
-	if data, _ := br.Peek(4024); len(data) > 0 { //next 1024 bytes without advancing the reader.
-		if _, name, ok := charset.DetermineEncoding(data, resp.Header.Get("content-type")); ok {
+	if data, err2 := br.Peek(1024); err2 == nil { //next 1024 bytes without advancing the reader.
+		enc, name, _ := charset.DetermineEncoding(data, resp.Header.Get("content-type"))
+		if enc != nil {
+			r = enc.NewDecoder().Reader(br)
+		} else if len(name) > 0 {
 			if enc := encoding.GetEncoding(name); enc != nil {
 				r = enc.NewDecoder().Reader(br)
 			}
