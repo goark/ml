@@ -30,6 +30,12 @@ fmt.Println(link.Encode(mklink.StyleMarkdown))
 
 ## Command Line Interface
 
+### Binaries
+
+See [latest release](https://github.com/spiegel-im-spiegel/mklink/releases/latest).
+
+### Usage
+
 ```
 $ mklink -h
 Usage:
@@ -83,7 +89,7 @@ Support: `markdown`, `wiki`, `html`, `csv`
 ## Dependencies
 
 ```
-dep status -dot | dot -Tpng -o dependency.png
+$ dep status -dot | dot -Tpng -o dependency.png
 ```
 
 [![Dependencies](dependency.png)](dependency.png)

@@ -30,7 +30,7 @@ func New(url string) (*Link, error) {
 	link := &Link{URL: trimString(url)}
 	resp, err := http.Get(url)
 	if err != nil {
-		return nil, err
+		return link, err
 	}
 	defer resp.Body.Close()
 
