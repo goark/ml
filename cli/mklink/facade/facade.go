@@ -8,7 +8,8 @@ import (
 	"runtime"
 
 	"github.com/spf13/cobra"
-	"github.com/spiegel-im-spiegel/gocli"
+	"github.com/spiegel-im-spiegel/gocli/exitcode"
+	"github.com/spiegel-im-spiegel/gocli/rwi"
 	"github.com/spiegel-im-spiegel/mklink"
 	"github.com/spiegel-im-spiegel/mklink/cli/mklink/interactive"
 	"github.com/spiegel-im-spiegel/mklink/cli/mklink/makelink"
@@ -25,81 +26,92 @@ var (
 	defaultStyle    = mklink.StyleMarkdown.String() //default link style
 	versionFlag     bool                            //version flag
 	interactiveFlag bool                            //interactive mode flag
-	cui             = gocli.NewUI()                 //CUI instance
+	cui             = rwi.New()                     //CUI instance
 )
 
-// rootCmd represents the base command when called without any subcommands
-var rootCmd = &cobra.Command{
-	Use: Name + " [flags] [URL [URL]...]",
-	RunE: func(cmd *cobra.Command, args []string) error {
-		//parse options
-		if versionFlag {
-			cui.OutputErr(Name)
-			if len(Version) > 0 {
-				cui.OutputErr(fmt.Sprintf(" v%s", Version))
+//newRootCmd returns cobra.Command instance for root command
+func newRootCmd(ui *rwi.RWI, args []string) *cobra.Command {
+	cui = ui
+	rootCmd := &cobra.Command{
+		Use: Name + " [flags] [URL [URL]...]",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			//parse options
+			if versionFlag {
+				cui.OutputErr(Name)
+				if len(Version) > 0 {
+					cui.OutputErr(fmt.Sprintf(" v%s", Version))
+				}
+				cui.OutputErrln()
+				return nil
 			}
-			cui.OutputErrln()
+
+			strStyle, err := cmd.Flags().GetString("style")
+			if err != nil {
+				return err
+			}
+			style, err := mklink.GetStyle(strStyle)
+			if err != nil {
+				return err
+			}
+
+			logfile, err := cmd.Flags().GetString("log")
+			if err != nil {
+				return err
+			}
+			var log io.Writer
+			if len(logfile) > 0 {
+				file, err := os.OpenFile(logfile, os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0666)
+				if err != nil {
+					return err
+				}
+				defer file.Close()
+				log = file
+			}
+
+			if interactiveFlag {
+				i, err := interactive.New(style, log)
+				if err != nil {
+					return err
+				}
+				return i.Run()
+			}
+
+			lnk := makelink.New(style, cui.Writer(), log)
+			if len(args) > 0 {
+				for _, arg := range args {
+					err := lnk.MakeLink(arg)
+					if err != nil {
+						return err
+					}
+				}
+			} else {
+				scanner := bufio.NewScanner(cui.Reader())
+				for scanner.Scan() {
+					err := lnk.MakeLink(scanner.Text())
+					if err != nil {
+						return err
+					}
+				}
+				if err := scanner.Err(); err != nil {
+					return err
+				}
+			}
 			return nil
-		}
+		},
+	}
+	rootCmd.SetArgs(args)
+	rootCmd.SetOutput(ui.ErrorWriter())
 
-		strStyle, err := cmd.Flags().GetString("style")
-		if err != nil {
-			return err
-		}
-		style, err := mklink.GetStyle(strStyle)
-		if err != nil {
-			return err
-		}
+	rootCmd.Flags().BoolVarP(&versionFlag, "version", "v", false, "output version of "+Name)
+	rootCmd.Flags().BoolVarP(&interactiveFlag, "interactive", "i", false, "interactive mode")
+	rootCmd.Flags().StringP("style", "s", defaultStyle, "link style")
+	rootCmd.Flags().StringP("log", "", "", "output log")
 
-		logfile, err := cmd.Flags().GetString("log")
-		if err != nil {
-			return err
-		}
-		var log io.Writer
-		if len(logfile) > 0 {
-			file, err := os.OpenFile(logfile, os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0666)
-			if err != nil {
-				return err
-			}
-			defer file.Close()
-			log = file
-		}
-
-		if interactiveFlag {
-			i, err := interactive.New(style, log)
-			if err != nil {
-				return err
-			}
-			return i.Run()
-		}
-
-		lnk := makelink.New(style, cui.Writer(), log)
-		if len(args) > 0 {
-			for _, arg := range args {
-				err := lnk.MakeLink(arg)
-				if err != nil {
-					return err
-				}
-			}
-		} else {
-			scanner := bufio.NewScanner(cui.Reader())
-			for scanner.Scan() {
-				err := lnk.MakeLink(scanner.Text())
-				if err != nil {
-					return err
-				}
-			}
-			if err := scanner.Err(); err != nil {
-				return err
-			}
-		}
-		return nil
-	},
+	return rootCmd
 }
 
-// Execute adds all child commands to the root command and sets flags appropriately.
-// This is called by main.main(). It only needs to happen once to the rootCmd.
-func Execute(ui *gocli.UI, args []string) (exit ExitCode) {
+//Execute is called from main function
+func Execute(ui *rwi.RWI, args []string) (exit exitcode.ExitCode) {
 	defer func() {
 		//panic hundling
 		if r := recover(); r != nil {
@@ -111,24 +123,14 @@ func Execute(ui *gocli.UI, args []string) (exit ExitCode) {
 				}
 				cui.OutputErrln(" ->", depth, ":", runtime.FuncForPC(pc).Name(), ": line", line)
 			}
-			exit = ExitAbnormal
+			exit = exitcode.Abnormal
 		}
 	}()
 
 	//execution
-	cui = ui
-	rootCmd.SetArgs(args)
-	rootCmd.SetOutput(ui.ErrorWriter())
-	exit = ExitNormal
-	if err := rootCmd.Execute(); err != nil {
-		exit = ExitAbnormal
+	exit = exitcode.Normal
+	if err := newRootCmd(ui, args).Execute(); err != nil {
+		exit = exitcode.Abnormal
 	}
 	return
-}
-
-func init() {
-	rootCmd.Flags().BoolVarP(&versionFlag, "version", "v", false, "output version of "+Name)
-	rootCmd.Flags().BoolVarP(&interactiveFlag, "interactive", "i", false, "interactive mode")
-	rootCmd.Flags().StringP("style", "s", defaultStyle, "link style")
-	rootCmd.Flags().StringP("log", "", "", "output log")
 }

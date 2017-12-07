@@ -4,19 +4,19 @@ import (
 	"bytes"
 	"testing"
 
-	"github.com/spiegel-im-spiegel/gocli"
+	"github.com/spiegel-im-spiegel/gocli/exitcode"
+	"github.com/spiegel-im-spiegel/gocli/rwi"
 )
 
 func TestStyleMarkdown(t *testing.T) {
 	outBuf := new(bytes.Buffer)
 	outErrBuf := new(bytes.Buffer)
-	ui := gocli.NewUI(gocli.Writer(outBuf), gocli.ErrorWriter(outErrBuf))
+	ui := rwi.New(rwi.Writer(outBuf), rwi.ErrorWriter(outErrBuf))
 	args := []string{"http://text.baldanders.info"}
 
-	clearFlags()
 	exit := Execute(ui, args)
-	if exit != ExitNormal {
-		t.Errorf("Execute(markdown) = \"%v\", want \"%v\".", exit, ExitNormal)
+	if exit != exitcode.Normal {
+		t.Errorf("Execute(markdown) = \"%v\", want \"%v\".", exit, exitcode.Normal)
 	}
 	str := outErrBuf.String()
 	if str != "" {
@@ -32,26 +32,24 @@ func TestStyleMarkdown(t *testing.T) {
 func TestUrlErr(t *testing.T) {
 	outBuf := new(bytes.Buffer)
 	outErrBuf := new(bytes.Buffer)
-	ui := gocli.NewUI(gocli.Writer(outBuf), gocli.ErrorWriter(outErrBuf))
+	ui := rwi.New(rwi.Writer(outBuf), rwi.ErrorWriter(outErrBuf))
 	args := []string{"http://foo.bar"}
 
-	clearFlags()
 	exit := Execute(ui, args)
-	if exit != ExitAbnormal {
-		t.Errorf("Execute(markdown) = \"%v\", want \"%v\".", exit, ExitAbnormal)
+	if exit != exitcode.Abnormal {
+		t.Errorf("Execute(markdown) = \"%v\", want \"%v\".", exit, exitcode.Abnormal)
 	}
 }
 
 func TestStyleWiki(t *testing.T) {
 	outBuf := new(bytes.Buffer)
 	outErrBuf := new(bytes.Buffer)
-	ui := gocli.NewUI(gocli.Writer(outBuf), gocli.ErrorWriter(outErrBuf))
+	ui := rwi.New(rwi.Writer(outBuf), rwi.ErrorWriter(outErrBuf))
 	args := []string{"-s", "wiki", "http://text.baldanders.info"}
 
-	clearFlags()
 	exit := Execute(ui, args)
-	if exit != ExitNormal {
-		t.Errorf("Execute(wiki) = \"%v\", want \"%v\".", exit, ExitNormal)
+	if exit != exitcode.Normal {
+		t.Errorf("Execute(wiki) = \"%v\", want \"%v\".", exit, exitcode.Normal)
 	}
 	str := outErrBuf.String()
 	if str != "" {
@@ -68,13 +66,12 @@ func TestPipe(t *testing.T) {
 	inData := bytes.NewBufferString("http://text.baldanders.info")
 	outBuf := new(bytes.Buffer)
 	outErrBuf := new(bytes.Buffer)
-	ui := gocli.NewUI(gocli.Reader(inData), gocli.Writer(outBuf), gocli.ErrorWriter(outErrBuf))
+	ui := rwi.New(rwi.Reader(inData), rwi.Writer(outBuf), rwi.ErrorWriter(outErrBuf))
 	args := []string{}
 
-	clearFlags()
 	exit := Execute(ui, args)
-	if exit != ExitNormal {
-		t.Errorf("Execute(pipe) = \"%v\", want \"%v\".", exit, ExitNormal)
+	if exit != exitcode.Normal {
+		t.Errorf("Execute(pipe) = \"%v\", want \"%v\".", exit, exitcode.Normal)
 	}
 	str := outErrBuf.String()
 	if str != "" {
@@ -87,23 +84,15 @@ func TestPipe(t *testing.T) {
 	}
 }
 
-func TestUrlErr2(t *testing.T) {
+func TestPipeUrlErr(t *testing.T) {
 	inData := bytes.NewBufferString("http://foo.bar")
 	outBuf := new(bytes.Buffer)
 	outErrBuf := new(bytes.Buffer)
-	ui := gocli.NewUI(gocli.Reader(inData), gocli.Writer(outBuf), gocli.ErrorWriter(outErrBuf))
+	ui := rwi.New(rwi.Reader(inData), rwi.Writer(outBuf), rwi.ErrorWriter(outErrBuf))
 	args := []string{}
 
-	clearFlags()
 	exit := Execute(ui, args)
-	if exit != ExitAbnormal {
-		t.Errorf("Execute(pipe) = \"%v\", want \"%v\".", exit, ExitAbnormal)
+	if exit != exitcode.Abnormal {
+		t.Errorf("Execute(pipe) = \"%v\", want \"%v\".", exit, exitcode.Abnormal)
 	}
-}
-
-func clearFlags() {
-	rootCmd.Flag("version").Value.Set("false")
-	rootCmd.Flag("interactive").Value.Set("false")
-	rootCmd.Flag("style").Value.Set(defaultStyle)
-	rootCmd.Flag("log").Value.Set("")
 }

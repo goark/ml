@@ -4,7 +4,8 @@ import (
 	"bytes"
 	"testing"
 
-	"github.com/spiegel-im-spiegel/gocli"
+	"github.com/spiegel-im-spiegel/gocli/exitcode"
+	"github.com/spiegel-im-spiegel/gocli/rwi"
 )
 
 func TestVersionMin(t *testing.T) {
@@ -12,13 +13,12 @@ func TestVersionMin(t *testing.T) {
 
 	outBuf := new(bytes.Buffer)
 	outErrBuf := new(bytes.Buffer)
-	ui := gocli.NewUI(gocli.Writer(outBuf), gocli.ErrorWriter(outErrBuf))
+	ui := rwi.New(rwi.Writer(outBuf), rwi.ErrorWriter(outErrBuf))
 	args := []string{"-v"}
 
-	clearFlags()
 	exit := Execute(ui, args)
-	if exit != ExitNormal {
-		t.Errorf("Execute(version) = \"%v\", want \"%v\".", exit, ExitNormal)
+	if exit != exitcode.Normal {
+		t.Errorf("Execute(version) = \"%v\", want \"%v\".", exit, exitcode.Normal)
 	}
 	str := outBuf.String()
 	if str != "" {
@@ -36,13 +36,12 @@ func TestVersionNum(t *testing.T) {
 
 	outBuf := new(bytes.Buffer)
 	outErrBuf := new(bytes.Buffer)
-	ui := gocli.NewUI(gocli.Writer(outBuf), gocli.ErrorWriter(outErrBuf))
+	ui := rwi.New(rwi.Writer(outBuf), rwi.ErrorWriter(outErrBuf))
 	args := []string{"-v"}
 
-	clearFlags()
 	exit := Execute(ui, args)
-	if exit != ExitNormal {
-		t.Errorf("Execute(version) = \"%v\", want \"%v\".", exit, ExitNormal)
+	if exit != exitcode.Normal {
+		t.Errorf("Execute(version) = \"%v\", want \"%v\".", exit, exitcode.Normal)
 	}
 	str := outBuf.String()
 	if str != "" {
