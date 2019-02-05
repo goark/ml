@@ -72,9 +72,14 @@ func New(url string) (*Link, error) {
 	return link, nil
 }
 
+var replacer = strings.NewReplacer(
+	"\r\n", " ",
+	"\r", " ",
+	"\n", " ",
+)
+
 func trimString(s string) string {
-	s = strings.Replace(s, "\n", " ", -1)
-	return strings.Trim(s, "\t ")
+	return strings.TrimSpace(replacer.Replace(s))
 }
 
 //JSON returns string (io.Reader) with JSON format
