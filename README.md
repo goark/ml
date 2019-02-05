@@ -82,13 +82,5 @@ $ mklink -s html https://git.io/vFR5M
 
 Support: `markdown`, `wiki`, `html`, `csv`
 
-## Dependencies
-
-```
-$ dep status -dot | dot -Tpng -o dependency.png
-```
-
-[![Dependencies](dependency.png)](dependency.png)
-
 [mklink]: https://github.com/spiegel-im-spiegel/mklink "spiegel-im-spiegel/mklink: Make Link with Markdown Format"
 [dep]: https://github.com/golang/dep "golang/dep: Go dependency management tool"
