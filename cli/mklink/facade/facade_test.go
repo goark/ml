@@ -11,7 +11,7 @@ import (
 func TestStyleMarkdown(t *testing.T) {
 	outBuf := new(bytes.Buffer)
 	outErrBuf := new(bytes.Buffer)
-	ui := rwi.New(rwi.Writer(outBuf), rwi.ErrorWriter(outErrBuf))
+	ui := rwi.New(rwi.WithWriter(outBuf), rwi.WithErrorWriter(outErrBuf))
 	args := []string{"http://text.baldanders.info"}
 
 	exit := Execute(ui, args)
@@ -32,7 +32,7 @@ func TestStyleMarkdown(t *testing.T) {
 func TestUrlErr(t *testing.T) {
 	outBuf := new(bytes.Buffer)
 	outErrBuf := new(bytes.Buffer)
-	ui := rwi.New(rwi.Writer(outBuf), rwi.ErrorWriter(outErrBuf))
+	ui := rwi.New(rwi.WithWriter(outBuf), rwi.WithErrorWriter(outErrBuf))
 	args := []string{"http://foo.bar"}
 
 	exit := Execute(ui, args)
@@ -44,7 +44,7 @@ func TestUrlErr(t *testing.T) {
 func TestStyleWiki(t *testing.T) {
 	outBuf := new(bytes.Buffer)
 	outErrBuf := new(bytes.Buffer)
-	ui := rwi.New(rwi.Writer(outBuf), rwi.ErrorWriter(outErrBuf))
+	ui := rwi.New(rwi.WithWriter(outBuf), rwi.WithErrorWriter(outErrBuf))
 	args := []string{"-s", "wiki", "http://text.baldanders.info"}
 
 	exit := Execute(ui, args)
@@ -66,7 +66,7 @@ func TestPipe(t *testing.T) {
 	inData := bytes.NewBufferString("http://text.baldanders.info")
 	outBuf := new(bytes.Buffer)
 	outErrBuf := new(bytes.Buffer)
-	ui := rwi.New(rwi.Reader(inData), rwi.Writer(outBuf), rwi.ErrorWriter(outErrBuf))
+	ui := rwi.New(rwi.WithReader(inData), rwi.WithWriter(outBuf), rwi.WithErrorWriter(outErrBuf))
 	args := []string{}
 
 	exit := Execute(ui, args)
@@ -88,7 +88,7 @@ func TestPipeUrlErr(t *testing.T) {
 	inData := bytes.NewBufferString("http://foo.bar")
 	outBuf := new(bytes.Buffer)
 	outErrBuf := new(bytes.Buffer)
-	ui := rwi.New(rwi.Reader(inData), rwi.Writer(outBuf), rwi.ErrorWriter(outErrBuf))
+	ui := rwi.New(rwi.WithReader(inData), rwi.WithWriter(outBuf), rwi.WithErrorWriter(outErrBuf))
 	args := []string{}
 
 	exit := Execute(ui, args)
