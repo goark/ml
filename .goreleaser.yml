@@ -21,7 +21,7 @@ builds:
   goarm:
   - "6"
   main: ./cli/mklink/
-  ldflags: -s -w -X github.com/spiegel-im-spiegel/mklink/cli/mklink/facade.Version={{ .Version }}
+  ldflags: -s -w -X github.com/spiegel-im-spiegel/mklink/cli/mklink/facade.Version=v{{ .Version }}
   binary: mklink
 
 archive:

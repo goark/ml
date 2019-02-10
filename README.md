@@ -4,11 +4,28 @@
 [![GitHub license](https://img.shields.io/badge/license-Apache%202-blue.svg)](https://raw.githubusercontent.com/spiegel-im-spiegel/mklink/master/LICENSE)
 [![GitHub release](http://img.shields.io/github/release/spiegel-im-spiegel/mklink.svg)](https://github.com/spiegel-im-spiegel/mklink/releases/latest)
 
-## Install
+## Declare [gpgpdump] module
+
+See [go.mod](https://github.com/spiegel-im-spiegel/mklink/blob/master/go.mod) file. 
+
+### Module Requirement Graph
 
 ```
-$ export GO111MODULE=on
-$ go get github.com/spiegel-im-spiegel/mklink@latest
+$ go mod graph
+github.com/spiegel-im-spiegel/mklink github.com/PuerkitoBio/goquery@v1.5.0
+github.com/spiegel-im-spiegel/mklink github.com/atotto/clipboard@v0.1.1
+github.com/spiegel-im-spiegel/mklink github.com/inconshreveable/mousetrap@v1.0.0
+github.com/spiegel-im-spiegel/mklink github.com/mattn/go-encoding@v0.0.2
+github.com/spiegel-im-spiegel/mklink github.com/pkg/errors@v0.8.1
+github.com/spiegel-im-spiegel/mklink github.com/spf13/cobra@v0.0.3
+github.com/spiegel-im-spiegel/mklink github.com/spf13/pflag@v1.0.3
+github.com/spiegel-im-spiegel/mklink github.com/spiegel-im-spiegel/gocli@v0.9.1
+github.com/spiegel-im-spiegel/mklink golang.org/x/net@v0.0.0-20190206173232-65e2d4e15006
+github.com/spiegel-im-spiegel/mklink golang.org/x/text@v0.3.0
+github.com/spiegel-im-spiegel/gocli@v0.9.1 github.com/mattn/go-isatty@v0.0.4
+github.com/PuerkitoBio/goquery@v1.5.0 github.com/andybalholm/cascadia@v1.0.0
+github.com/PuerkitoBio/goquery@v1.5.0 golang.org/x/net@v0.0.0-20181114220301-adae6a3d119a
+github.com/andybalholm/cascadia@v1.0.0 golang.org/x/net@v0.0.0-20180218175443-cbe0f9307d01
 ```
 
 ## Usage
