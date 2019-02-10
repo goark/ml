@@ -2,7 +2,6 @@ package facade
 
 import (
 	"bufio"
-	"fmt"
 	"io"
 	"os"
 	"runtime"
@@ -11,7 +10,6 @@ import (
 	"github.com/spiegel-im-spiegel/gocli/exitcode"
 	"github.com/spiegel-im-spiegel/gocli/rwi"
 	"github.com/spiegel-im-spiegel/mklink"
-	"github.com/spiegel-im-spiegel/mklink/cli/mklink/interactive"
 	"github.com/spiegel-im-spiegel/mklink/cli/mklink/makelink"
 )
 
@@ -19,7 +17,7 @@ var (
 	//Name is applicatin name
 	Name = "mklink"
 	//Version is version for applicatin
-	Version string
+	Version = "dev-version"
 )
 
 var (
@@ -37,12 +35,7 @@ func newRootCmd(ui *rwi.RWI, args []string) *cobra.Command {
 		RunE: func(cmd *cobra.Command, args []string) error {
 			//parse options
 			if versionFlag {
-				cui.OutputErr(Name)
-				if len(Version) > 0 {
-					cui.OutputErr(fmt.Sprintf(" v%s", Version))
-				}
-				cui.OutputErrln()
-				return nil
+				return cui.OutputErrln(Name, Version)
 			}
 
 			strStyle, err := cmd.Flags().GetString("style")
@@ -60,7 +53,7 @@ func newRootCmd(ui *rwi.RWI, args []string) *cobra.Command {
 			}
 			var log io.Writer
 			if len(logfile) > 0 {
-				file, err := os.OpenFile(logfile, os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0666)
+				file, err := os.Create(logfile)
 				if err != nil {
 					return err
 				}
@@ -68,29 +61,33 @@ func newRootCmd(ui *rwi.RWI, args []string) *cobra.Command {
 				log = file
 			}
 
+			lnk := makelink.New(style, log)
 			if interactiveFlag {
-				i, err := interactive.New(style, log)
-				if err != nil {
-					return err
-				}
-				return i.Run()
+				return interactiveMode(ui, lnk)
 			}
 
-			lnk := makelink.New(style, cui.Writer(), log)
 			if len(args) > 0 {
 				for _, arg := range args {
-					err := lnk.MakeLink(arg)
+					r, err := lnk.MakeLink(arg)
 					if err != nil {
 						return err
 					}
+					if err := ui.WriteFrom(r); err != nil {
+						return err
+					}
+					_ = ui.Outputln()
 				}
 			} else {
 				scanner := bufio.NewScanner(cui.Reader())
 				for scanner.Scan() {
-					err := lnk.MakeLink(scanner.Text())
+					r, err := lnk.MakeLink(scanner.Text())
 					if err != nil {
 						return err
 					}
+					if err := ui.WriteFrom(r); err != nil {
+						return err
+					}
+					_ = ui.Outputln()
 				}
 				if err := scanner.Err(); err != nil {
 					return err
@@ -115,13 +112,13 @@ func Execute(ui *rwi.RWI, args []string) (exit exitcode.ExitCode) {
 	defer func() {
 		//panic hundling
 		if r := recover(); r != nil {
-			cui.OutputErrln("Panic:", r)
+			_ = cui.OutputErrln("Panic:", r)
 			for depth := 0; ; depth++ {
 				pc, _, line, ok := runtime.Caller(depth)
 				if !ok {
 					break
 				}
-				cui.OutputErrln(" ->", depth, ":", runtime.FuncForPC(pc).Name(), ": line", line)
+				_ = cui.OutputErrln(" ->", depth, ":", runtime.FuncForPC(pc).Name(), ": line", line)
 			}
 			exit = exitcode.Abnormal
 		}
@@ -134,3 +131,18 @@ func Execute(ui *rwi.RWI, args []string) (exit exitcode.ExitCode) {
 	}
 	return
 }
+
+/* Copyright 2017-2019 Spiegel
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * 	http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
