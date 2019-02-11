@@ -2,7 +2,6 @@ package facade
 
 import (
 	"bytes"
-	"fmt"
 	"io"
 
 	"github.com/atotto/clipboard"
@@ -30,7 +29,6 @@ func interactiveMode(ui *rwi.RWI, cxt *makelink.Context) error {
 			if _, err := io.Copy(buf, r); err != nil {
 				return "", err
 			}
-			fmt.Fprintln(buf)
 			res := buf.String()
 			return res, clipboard.WriteAll(res)
 		},
