@@ -5,10 +5,11 @@ import (
 	"io"
 
 	"github.com/atotto/clipboard"
-	"github.com/pkg/errors"
 	"github.com/spiegel-im-spiegel/gocli/prompt"
 	"github.com/spiegel-im-spiegel/gocli/rwi"
 	"github.com/spiegel-im-spiegel/mklink/cli/mklink/makelink"
+	"github.com/spiegel-im-spiegel/mklink/errs"
+	errors "golang.org/x/xerrors"
 )
 
 func interactiveMode(ui *rwi.RWI, cxt *makelink.Context) error {
@@ -23,14 +24,14 @@ func interactiveMode(ui *rwi.RWI, cxt *makelink.Context) error {
 			}
 			r, err := cxt.MakeLink(url)
 			if err != nil {
-				return err.Error(), nil
+				return errs.Cause(err).Error(), nil
 			}
 			buf := &bytes.Buffer{}
 			if _, err := io.Copy(buf, r); err != nil {
-				return "", err
+				return "", errs.Wrap(err, "error when output result")
 			}
 			res := buf.String()
-			return res, clipboard.WriteAll(res)
+			return res, errs.Wrap(clipboard.WriteAll(res), "error when output result")
 		},
 		prompt.WithPromptString("mklink> "),
 		prompt.WithHeaderMessage("Input 'q' or 'quit' to stop"),
@@ -38,10 +39,7 @@ func interactiveMode(ui *rwi.RWI, cxt *makelink.Context) error {
 	if !p.IsTerminal() {
 		return errors.New("not terminal (or pipe?)")
 	}
-	if err := p.Run(); err != nil {
-		return err
-	}
-	return nil
+	return errs.Wrap(p.Run(), "error in interactive mode")
 }
 
 /* Copyright 2019 Spiegel

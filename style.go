@@ -1,16 +1,9 @@
 package mklink
 
 import (
-	"bytes"
-	"io"
 	"strings"
 
-	"github.com/pkg/errors"
-)
-
-var (
-	//ErrNoImplement is error "no implementation"
-	ErrNoImplement = errors.New("no implementation")
+	"github.com/spiegel-im-spiegel/mklink/errs"
 )
 
 //Style as link style
@@ -36,26 +29,17 @@ var (
 		StyleHTML:     "html",
 		StyleCSV:      "csv",
 	}
-	styleList = []Style{
-		StyleMarkdown,
-		StyleWiki,
-		StyleHTML,
-		StyleCSV,
+	styleList = []string{
+		styleMap[StyleMarkdown],
+		styleMap[StyleWiki],
+		styleMap[StyleHTML],
+		styleMap[StyleCSV],
 	}
 )
 
 //StyleList returns string Style list
 func StyleList() string {
-	buf := new(bytes.Buffer)
-	sep := ""
-	for _, t := range styleList {
-		if name, ok := styleMap[t]; ok {
-			io.WriteString(buf, sep)
-			io.WriteString(buf, name)
-			sep = " "
-		}
-	}
-	return buf.String()
+	return strings.Join(styleList, " ")
 }
 
 //GetStyle returns Style from string
@@ -66,7 +50,7 @@ func GetStyle(s string) (Style, error) {
 			return t, nil
 		}
 	}
-	return StyleUnknown, errors.Wrap(ErrNoImplement, "error "+s)
+	return StyleUnknown, errs.Wrapf(errs.ErrNoImplement, "error in \"%v\" style", s)
 }
 
 func (t Style) String() string {
