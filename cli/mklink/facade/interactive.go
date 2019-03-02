@@ -9,7 +9,6 @@ import (
 	"github.com/spiegel-im-spiegel/gocli/rwi"
 	"github.com/spiegel-im-spiegel/mklink/cli/mklink/makelink"
 	"github.com/spiegel-im-spiegel/mklink/errs"
-	errors "golang.org/x/xerrors"
 )
 
 func interactiveMode(ui *rwi.RWI, cxt *makelink.Context) error {
@@ -37,7 +36,7 @@ func interactiveMode(ui *rwi.RWI, cxt *makelink.Context) error {
 		prompt.WithHeaderMessage("Input 'q' or 'quit' to stop"),
 	)
 	if !p.IsTerminal() {
-		return errors.New("not terminal (or pipe?)")
+		return errs.Wrap(prompt.ErrNotTerminal, "error in interactive mode")
 	}
 	return errs.Wrap(p.Run(), "error in interactive mode")
 }
