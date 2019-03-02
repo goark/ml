@@ -1,6 +1,12 @@
 package mklink
 
-import "testing"
+import (
+	"fmt"
+	"testing"
+
+	"github.com/spiegel-im-spiegel/mklink/errs"
+	errors "golang.org/x/xerrors"
+)
 
 type typesTestCase struct {
 	name string
@@ -18,19 +24,20 @@ func TestGetStyle(t *testing.T) {
 	for _, tst := range typesTests {
 		tps, err := GetStyle(tst.name)
 		if err != nil {
-			t.Errorf("GetStyles()  = \"%v\", want nil error.", err)
+			t.Errorf("GetStyles() = \"%+v\".", err)
 		} else if tps.String() != tst.t.String() {
-			t.Errorf("GetStyles()  = \"%v\", want \"%v\".", tps, tst.t)
+			t.Errorf("GetStyles() = \"%v\", want \"%v\".", tps, tst.t)
 		}
 	}
 }
 
 func TestGetStyleErr(t *testing.T) {
 	tps, err := GetStyle("foobar")
-	if err == nil {
-		t.Error("GetStyles(foobar)  = nil error, not want nil error.")
+	fmt.Printf("Info(TestGetStyleErr): %+v\n", err)
+	if !errors.Is(err, errs.ErrNoImplement) {
+		t.Errorf("GetStyles(foobar) error = \"%v\", want \"%v\".", err, errs.ErrNoImplement)
 	} else if tps.String() != "unknown" {
-		t.Errorf("GetStyles(foobar)  = \"%v\", want \"unknown\".", tps)
+		t.Errorf("GetStyles(foobar) = \"%v\", want \"unknown\".", tps)
 	}
 }
 
@@ -38,7 +45,7 @@ func TestStyleList(t *testing.T) {
 	str := StyleList()
 	res := "markdown wiki html csv"
 	if str != res {
-		t.Errorf("StylesList()  = \"%v\", want \"%v\".", str, res)
+		t.Errorf("StylesList() = \"%v\", want \"%v\".", str, res)
 	}
 }
 

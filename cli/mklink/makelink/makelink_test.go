@@ -2,7 +2,9 @@ package makelink
 
 import (
 	"bytes"
+	"fmt"
 	"io"
+	"os"
 	"testing"
 
 	"github.com/spiegel-im-spiegel/mklink"
@@ -12,11 +14,11 @@ func TestMakeLink(t *testing.T) {
 	logBuf := new(bytes.Buffer)
 	rRes, err := New(mklink.StyleMarkdown, logBuf).MakeLink("https://git.io/vFR5M")
 	if err != nil {
-		t.Errorf("Error of Context.MakeLink()  = %v, want nil.", err)
+		t.Errorf("Error in Context.MakeLink(): %+v", err)
 	}
 	outBuf := new(bytes.Buffer)
 	if _, err := io.Copy(outBuf, rRes); err != nil {
-		t.Errorf("Error of io.Copy()  = %v, want nil.", err)
+		t.Errorf("Error in io.Copy(): %+v", err)
 	}
 
 	res := "[GitHub - spiegel-im-spiegel/mklink: Make Link with Markdown Format](https://github.com/spiegel-im-spiegel/mklink)"
@@ -33,11 +35,11 @@ func TestMakeLink(t *testing.T) {
 func TestMakeLinkNil(t *testing.T) {
 	rRes, err := New(mklink.StyleMarkdown, nil).MakeLink("https://git.io/vFR5M")
 	if err != nil {
-		t.Errorf("Context.MakeLink()  = \"%v\", want nil error.", err)
+		t.Errorf("Error in Context.MakeLink(): %+v", err)
 	}
 	outBuf := new(bytes.Buffer)
 	if _, err := io.Copy(outBuf, rRes); err != nil {
-		t.Errorf("Error of io.Copy()  = %v, want nil.", err)
+		t.Errorf("Error in io.Copy(): %+v", err)
 	}
 
 	res := "[GitHub - spiegel-im-spiegel/mklink: Make Link with Markdown Format](https://github.com/spiegel-im-spiegel/mklink)"
@@ -51,6 +53,8 @@ func TestMakeLinkErr(t *testing.T) {
 	_, err := New(mklink.StyleMarkdown, nil).MakeLink("https://foo.bar")
 	if err == nil {
 		t.Error("Context.MakeLink() = nil error, not want nil error.")
+	} else {
+		fmt.Fprintf(os.Stderr, "info: %+v\n", err)
 	}
 }
 

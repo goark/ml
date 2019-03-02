@@ -89,9 +89,7 @@ func newRootCmd(ui *rwi.RWI, args []string) *cobra.Command {
 					}
 					_ = ui.Outputln()
 				}
-				if err := scanner.Err(); err != nil {
-					return err
-				}
+				return scanner.Err()
 			}
 			return nil
 		},

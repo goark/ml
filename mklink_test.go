@@ -74,7 +74,7 @@ func TestNewErr(t *testing.T) {
 	if err == nil {
 		t.Error("New()  = nil error, not want nil error.")
 	} else {
-		fmt.Fprintf(os.Stderr, "info: %v\n", err)
+		fmt.Fprintf(os.Stderr, "info: %+v\n", err)
 	}
 }
 

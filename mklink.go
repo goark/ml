@@ -12,7 +12,7 @@ import (
 
 	"github.com/PuerkitoBio/goquery"
 	encoding "github.com/mattn/go-encoding"
-	"github.com/pkg/errors"
+	"github.com/spiegel-im-spiegel/mklink/errs"
 	"golang.org/x/net/html/charset"
 )
 
@@ -29,7 +29,7 @@ func New(url string) (*Link, error) {
 	link := &Link{URL: trimString(url)}
 	resp, err := http.Get(url)
 	if err != nil {
-		return link, err
+		return link, errs.Wrap(err, "Create mklink.Link instance")
 	}
 	defer resp.Body.Close()
 
@@ -49,7 +49,7 @@ func New(url string) (*Link, error) {
 	}
 	doc, err := goquery.NewDocumentFromReader(r)
 	if err != nil {
-		return link, err
+		return link, errs.Wrap(err, "Create mklink.Link instance")
 	}
 
 	doc.Find("head").Each(func(_ int, s *goquery.Selection) {
@@ -90,7 +90,7 @@ func (lnk *Link) JSON() (io.Reader, error) {
 	encoder := json.NewEncoder(buf)
 	encoder.SetIndent("", "  ")
 	if err := encoder.Encode(lnk); err != nil {
-		return ioutil.NopCloser(bytes.NewReader(nil)), errors.Wrap(err, "error in mklink.Link.JSON() function")
+		return ioutil.NopCloser(bytes.NewReader(nil)), errs.Wrap(err, "error in encoding JSON")
 	}
 	return buf, nil
 }

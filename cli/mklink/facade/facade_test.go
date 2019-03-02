@@ -2,11 +2,25 @@ package facade
 
 import (
 	"bytes"
+	"fmt"
 	"testing"
 
 	"github.com/spiegel-im-spiegel/gocli/exitcode"
 	"github.com/spiegel-im-spiegel/gocli/rwi"
 )
+
+func TestInteractiveError(t *testing.T) {
+	outBuf := new(bytes.Buffer)
+	outErrBuf := new(bytes.Buffer)
+	ui := rwi.New(rwi.WithWriter(outBuf), rwi.WithErrorWriter(outErrBuf))
+	args := []string{"-i"}
+
+	exit := Execute(ui, args)
+	if exit == exitcode.Normal {
+		t.Errorf("Execute(markdown) = \"%v\", want \"%v\".", exit, exitcode.Abnormal)
+	}
+	fmt.Printf("Info: %v", outErrBuf.String())
+}
 
 func TestStyleMarkdown(t *testing.T) {
 	outBuf := new(bytes.Buffer)

@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/pkg/errors"
 	"github.com/spiegel-im-spiegel/mklink"
+	"github.com/spiegel-im-spiegel/mklink/errs"
 )
 
 //Context class is context for making link
@@ -23,11 +23,11 @@ func New(s mklink.Style, log io.Writer) *Context {
 //MakeLink is making link
 func (c *Context) MakeLink(url string) (io.Reader, error) {
 	if c == nil {
-		return nil, errors.New("nil pointer in makelink.Context.MakeLink() function")
+		return nil, errs.Wrap(errs.ErrNullPointer, "reference error")
 	}
 	lnk, err := mklink.New(url)
 	if err != nil {
-		return nil, err
+		return nil, errs.Wrap(err, "error in constructor")
 	}
 
 	rRes := lnk.Encode(c.linkStyle)
@@ -36,7 +36,7 @@ func (c *Context) MakeLink(url string) (io.Reader, error) {
 	}
 	buf := new(bytes.Buffer)
 	if _, err := io.Copy(c.log, io.TeeReader(rRes, buf)); err != nil {
-		return buf, err
+		return buf, errs.Wrap(err, "error in logging")
 	}
 	fmt.Fprintln(c.log) //new line in logfile
 	return buf, nil
