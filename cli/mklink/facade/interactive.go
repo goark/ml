@@ -5,21 +5,21 @@ import (
 	"io"
 
 	"github.com/atotto/clipboard"
-	"github.com/spiegel-im-spiegel/gocli/prompt"
 	"github.com/spiegel-im-spiegel/gocli/rwi"
+	"github.com/spiegel-im-spiegel/gprompt"
 	"github.com/spiegel-im-spiegel/mklink/cli/mklink/makelink"
 	"github.com/spiegel-im-spiegel/mklink/errs"
 )
 
 func interactiveMode(ui *rwi.RWI, cxt *makelink.Context) error {
-	p := prompt.New(
+	p := gprompt.New(
 		rwi.New(
 			rwi.WithReader(ui.Reader()),
 			rwi.WithWriter(ui.Writer()),
 		),
 		func(url string) (string, error) {
 			if url == "q" || url == "quit" {
-				return "", prompt.ErrTerminate
+				return "", gprompt.ErrTerminate
 			}
 			r, err := cxt.MakeLink(url)
 			if err != nil {
@@ -32,11 +32,11 @@ func interactiveMode(ui *rwi.RWI, cxt *makelink.Context) error {
 			res := buf.String()
 			return res, errs.Wrap(clipboard.WriteAll(res), "error when output result")
 		},
-		prompt.WithPromptString("mklink> "),
-		prompt.WithHeaderMessage("Input 'q' or 'quit' to stop"),
+		gprompt.WithPromptString("mklink> "),
+		gprompt.WithHeaderMessage("Input 'q' or 'quit' to stop"),
 	)
 	if !p.IsTerminal() {
-		return errs.Wrap(prompt.ErrNotTerminal, "error in interactive mode")
+		return errs.Wrap(gprompt.ErrNotTerminal, "error in interactive mode")
 	}
 	return errs.Wrap(p.Run(), "error in interactive mode")
 }

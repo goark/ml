@@ -42,6 +42,7 @@ archive:
   files:
   - LICENSE*
   - README*
+  - mklink.png
 
 changelog:
   sort: asc

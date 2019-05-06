@@ -8,6 +8,8 @@
 
 See [go.mod](https://github.com/spiegel-im-spiegel/mklink/blob/master/go.mod) file. 
 
+![mklink](./mklink.png)
+
 ## Usage
 
 ```go
