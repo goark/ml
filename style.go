@@ -3,7 +3,7 @@ package mklink
 import (
 	"strings"
 
-	"github.com/spiegel-im-spiegel/mklink/errs"
+	"github.com/spiegel-im-spiegel/errs"
 )
 
 //Style as link style
@@ -50,7 +50,7 @@ func GetStyle(s string) (Style, error) {
 			return t, nil
 		}
 	}
-	return StyleUnknown, errs.Wrapf(errs.ErrNoImplement, "error in \"%v\" style", s)
+	return StyleUnknown, errs.Wrap(ErrNoImplement, "", errs.WithContext("style", s))
 }
 
 func (t Style) String() string {

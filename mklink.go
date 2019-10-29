@@ -12,7 +12,7 @@ import (
 
 	"github.com/PuerkitoBio/goquery"
 	encoding "github.com/mattn/go-encoding"
-	"github.com/spiegel-im-spiegel/mklink/errs"
+	"github.com/spiegel-im-spiegel/errs"
 	"golang.org/x/net/html/charset"
 )
 

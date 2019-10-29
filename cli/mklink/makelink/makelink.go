@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"io"
 
+	"github.com/spiegel-im-spiegel/errs"
 	"github.com/spiegel-im-spiegel/mklink"
-	"github.com/spiegel-im-spiegel/mklink/errs"
 )
 
 //Context class is context for making link
@@ -23,7 +23,7 @@ func New(s mklink.Style, log io.Writer) *Context {
 //MakeLink is making link
 func (c *Context) MakeLink(url string) (io.Reader, error) {
 	if c == nil {
-		return nil, errs.Wrap(errs.ErrNullPointer, "reference error")
+		return nil, errs.Wrap(mklink.ErrNullPointer, "reference error")
 	}
 	lnk, err := mklink.New(url)
 	if err != nil {

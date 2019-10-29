@@ -1,24 +1,27 @@
-package errs
+package mklink
 
 import (
+	"fmt"
 	"testing"
 )
 
-func TestCause(t *testing.T) {
+func TestNumError(t *testing.T) {
 	testCases := []struct {
-		err   error
-		cause error
+		err error
+		str string
 	}{
-		{err: nil, cause: nil},
-		{err: ErrNoImplement, cause: ErrNoImplement},
-		{err: Wrap(ErrNoImplement, "wrapping error"), cause: ErrNoImplement},
+		{err: Num(0), str: "unknown error (0)"},
+		{err: ErrNoImplement, str: "This style is not implementation"},
+		{err: ErrNullPointer, str: "Null reference instance"},
+		{err: Num(3), str: "unknown error (3)"},
 	}
 
 	for _, tc := range testCases {
-		res := Cause(tc.err)
-		if res != tc.cause {
-			t.Errorf("Cause in \"%v\" == \"%v\", want \"%v\"", tc.err, res, tc.cause)
+		errStr := tc.err.Error()
+		if errStr != tc.str {
+			t.Errorf("\"%v\" != \"%v\"", errStr, tc.str)
 		}
+		fmt.Printf("Info(TestNumError): %+v\n", tc.err)
 	}
 }
 

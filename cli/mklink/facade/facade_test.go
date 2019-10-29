@@ -26,7 +26,7 @@ func TestStyleMarkdown(t *testing.T) {
 	outBuf := new(bytes.Buffer)
 	outErrBuf := new(bytes.Buffer)
 	ui := rwi.New(rwi.WithWriter(outBuf), rwi.WithErrorWriter(outErrBuf))
-	args := []string{"http://text.baldanders.info"}
+	args := []string{"https://text.baldanders.info"}
 
 	exit := Execute(ui, args)
 	if exit != exitcode.Normal {
@@ -37,7 +37,7 @@ func TestStyleMarkdown(t *testing.T) {
 		t.Errorf("Execute(markdown) = \"%v\", want \"%v\".", str, "")
 	}
 	str = outBuf.String()
-	res := "[text.Baldanders.info](http://text.baldanders.info)\n"
+	res := "[text.Baldanders.info](https://text.baldanders.info)\n"
 	if str != res {
 		t.Errorf("Execute(markdown) = \"%v\", want \"%v\".", str, res)
 	}
@@ -59,7 +59,7 @@ func TestStyleWiki(t *testing.T) {
 	outBuf := new(bytes.Buffer)
 	outErrBuf := new(bytes.Buffer)
 	ui := rwi.New(rwi.WithWriter(outBuf), rwi.WithErrorWriter(outErrBuf))
-	args := []string{"-s", "wiki", "http://text.baldanders.info"}
+	args := []string{"-s", "wiki", "https://text.baldanders.info"}
 
 	exit := Execute(ui, args)
 	if exit != exitcode.Normal {
@@ -70,14 +70,14 @@ func TestStyleWiki(t *testing.T) {
 		t.Errorf("Execute(wiki) = \"%v\", want \"%v\".", str, "")
 	}
 	str = outBuf.String()
-	res := "[http://text.baldanders.info text.Baldanders.info]\n"
+	res := "[https://text.baldanders.info text.Baldanders.info]\n"
 	if str != res {
 		t.Errorf("Execute(wiki) = \"%v\", want \"%v\".", str, res)
 	}
 }
 
 func TestPipe(t *testing.T) {
-	inData := bytes.NewBufferString("http://text.baldanders.info")
+	inData := bytes.NewBufferString("https://text.baldanders.info")
 	outBuf := new(bytes.Buffer)
 	outErrBuf := new(bytes.Buffer)
 	ui := rwi.New(rwi.WithReader(inData), rwi.WithWriter(outBuf), rwi.WithErrorWriter(outErrBuf))
@@ -92,7 +92,7 @@ func TestPipe(t *testing.T) {
 		t.Errorf("Execute(pipe) = \"%v\", want \"%v\".", str, "")
 	}
 	str = outBuf.String()
-	res := "[text.Baldanders.info](http://text.baldanders.info)\n"
+	res := "[text.Baldanders.info](https://text.baldanders.info)\n"
 	if str != res {
 		t.Errorf("Execute(pipe) = \"%v\", want \"%v\".", str, res)
 	}
