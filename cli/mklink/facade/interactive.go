@@ -5,10 +5,10 @@ import (
 	"io"
 
 	"github.com/atotto/clipboard"
+	"github.com/spiegel-im-spiegel/errs"
 	"github.com/spiegel-im-spiegel/gocli/rwi"
 	"github.com/spiegel-im-spiegel/gprompt"
 	"github.com/spiegel-im-spiegel/mklink/cli/mklink/makelink"
-	"github.com/spiegel-im-spiegel/mklink/errs"
 )
 
 func interactiveMode(ui *rwi.RWI, cxt *makelink.Context) error {

@@ -1,11 +1,9 @@
 package mklink
 
 import (
+	"errors"
 	"fmt"
 	"testing"
-
-	"github.com/spiegel-im-spiegel/mklink/errs"
-	errors "golang.org/x/xerrors"
 )
 
 type typesTestCase struct {
@@ -34,8 +32,8 @@ func TestGetStyle(t *testing.T) {
 func TestGetStyleErr(t *testing.T) {
 	tps, err := GetStyle("foobar")
 	fmt.Printf("Info(TestGetStyleErr): %+v\n", err)
-	if !errors.Is(err, errs.ErrNoImplement) {
-		t.Errorf("GetStyles(foobar) error = \"%v\", want \"%v\".", err, errs.ErrNoImplement)
+	if !errors.Is(err, ErrNoImplement) {
+		t.Errorf("GetStyles(foobar) error = \"%v\", want \"%v\".", err, ErrNoImplement)
 	} else if tps.String() != "unknown" {
 		t.Errorf("GetStyles(foobar) = \"%v\", want \"unknown\".", tps)
 	}

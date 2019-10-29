@@ -18,13 +18,12 @@ builds:
   - "386"
   - arm
   - arm64
-  goarm:
-  - "6"
   main: ./cli/mklink/
   ldflags: -s -w -X github.com/spiegel-im-spiegel/mklink/cli/mklink/facade.Version=v{{ .Version }}
   binary: mklink
 
-archive:
+archives:
+-
   format: tar.gz
   format_overrides:
     - goos: windows
