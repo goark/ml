@@ -9,6 +9,6 @@ require (
 	github.com/spf13/cobra v0.0.5
 	github.com/spiegel-im-spiegel/errs v0.3.2
 	github.com/spiegel-im-spiegel/gocli v0.10.1
-	github.com/spiegel-im-spiegel/gprompt v0.9.5
+	github.com/spiegel-im-spiegel/gprompt v0.9.6
 	golang.org/x/net v0.0.0-20191028085509-fe3aa8a45271
 )
