@@ -27,21 +27,21 @@ func interactiveMode(ui *rwi.RWI, cxt *makelink.Context) error {
 			}
 			buf := &bytes.Buffer{}
 			if _, err := io.Copy(buf, r); err != nil {
-				return "", errs.Wrap(err, "error when output result")
+				return "", errs.New("error when output result", errs.WithCause(err))
 			}
 			res := buf.String()
-			return res, errs.Wrap(clipboard.WriteAll(res), "error when output result")
+			return res, errs.Wrap(clipboard.WriteAll(res))
 		},
 		gprompt.WithPromptString("mklink> "),
 		gprompt.WithHeaderMessage("Input 'q' or 'quit' to stop"),
 	)
 	if !p.IsTerminal() {
-		return errs.Wrap(gprompt.ErrNotTerminal, "error in interactive mode")
+		return errs.Wrap(gprompt.ErrNotTerminal)
 	}
-	return errs.Wrap(p.Run(), "error in interactive mode")
+	return errs.Wrap(p.Run())
 }
 
-/* Copyright 2019 Spiegel
+/* Copyright 2019,2020 Spiegel
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
