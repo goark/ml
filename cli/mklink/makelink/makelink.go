@@ -23,11 +23,11 @@ func New(s mklink.Style, log io.Writer) *Context {
 //MakeLink is making link
 func (c *Context) MakeLink(url string) (io.Reader, error) {
 	if c == nil {
-		return nil, errs.Wrap(mklink.ErrNullPointer, "reference error")
+		return nil, errs.New("reference error", errs.WithCause(mklink.ErrNullPointer))
 	}
 	lnk, err := mklink.New(url)
 	if err != nil {
-		return nil, errs.Wrap(err, "error in constructor")
+		return nil, errs.New("error in constructor", errs.WithCause(err))
 	}
 
 	rRes := lnk.Encode(c.linkStyle)
@@ -36,13 +36,13 @@ func (c *Context) MakeLink(url string) (io.Reader, error) {
 	}
 	buf := new(bytes.Buffer)
 	if _, err := io.Copy(c.log, io.TeeReader(rRes, buf)); err != nil {
-		return buf, errs.Wrap(err, "error in logging")
+		return buf, errs.New("error in logging", errs.WithCause(err))
 	}
 	fmt.Fprintln(c.log) //new line in logfile
 	return buf, nil
 }
 
-/* Copyright 2017-2019 Spiegel
+/* Copyright 2017-2020 Spiegel
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.

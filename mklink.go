@@ -29,7 +29,7 @@ func New(url string) (*Link, error) {
 	link := &Link{URL: trimString(url)}
 	resp, err := http.Get(url)
 	if err != nil {
-		return link, errs.Wrap(err, "Create mklink.Link instance")
+		return link, errs.New("Create mklink.Link instance", errs.WithCause(err))
 	}
 	defer resp.Body.Close()
 
@@ -49,7 +49,7 @@ func New(url string) (*Link, error) {
 	}
 	doc, err := goquery.NewDocumentFromReader(r)
 	if err != nil {
-		return link, errs.Wrap(err, "Create mklink.Link instance")
+		return link, errs.New("Create mklink.Link instance", errs.WithCause(err))
 	}
 
 	doc.Find("head").Each(func(_ int, s *goquery.Selection) {
@@ -90,7 +90,7 @@ func (lnk *Link) JSON() (io.Reader, error) {
 	encoder := json.NewEncoder(buf)
 	encoder.SetIndent("", "  ")
 	if err := encoder.Encode(lnk); err != nil {
-		return ioutil.NopCloser(bytes.NewReader(nil)), errs.Wrap(err, "error in encoding JSON")
+		return ioutil.NopCloser(bytes.NewReader(nil)), errs.New("error in encoding JSON", errs.WithCause(err))
 	}
 	return buf, nil
 }
@@ -136,7 +136,7 @@ func (lnk *Link) String() string {
 	return fmt.Sprint(r)
 }
 
-/* Copyright 2017-2019 Spiegel
+/* Copyright 2017-2020 Spiegel
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.

@@ -50,7 +50,7 @@ func GetStyle(s string) (Style, error) {
 			return t, nil
 		}
 	}
-	return StyleUnknown, errs.Wrap(ErrNoImplement, "", errs.WithContext("style", s))
+	return StyleUnknown, errs.Wrap(ErrNoImplement, errs.WithContext("style", s))
 }
 
 func (t Style) String() string {
