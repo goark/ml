@@ -1,5 +1,7 @@
 # [mklink] -- Make Link with Markdown Format
 
+[![Build Status](https://github.com/spiegel-im-spiegel/mklink/workflows/CI/badge.svg)](https://github.com/spiegel-im-spiegel/mklink/actions)
+
 [![Build Status](https://travis-ci.org/spiegel-im-spiegel/mklink.svg?branch=master)](https://travis-ci.org/spiegel-im-spiegel/mklink)
 [![GitHub license](https://img.shields.io/badge/license-Apache%202-blue.svg)](https://raw.githubusercontent.com/spiegel-im-spiegel/mklink/master/LICENSE)
 [![GitHub release](http://img.shields.io/github/release/spiegel-im-spiegel/mklink.svg)](https://github.com/spiegel-im-spiegel/mklink/releases/latest)
