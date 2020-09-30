@@ -164,10 +164,11 @@ github.com/spf13/pflag v1.0.3/go.mod h1:DYY7MBk1bdzusC3SYhjObp+wFpr4gzcvqqNjLnIn
 github.com/spf13/pflag v1.0.5 h1:iy+VFUOCP1a+8yFto/drg2CJ5u0yRoB7fZw3DKv/JXA=
 github.com/spf13/pflag v1.0.5/go.mod h1:McXfInJRrz4CZXVZOBLb0bTZqETkiAhM9Iw0y3An2Bg=
 github.com/spf13/viper v1.7.1/go.mod h1:8WkrPz2fc9jxqZNCJI/76HCieCp4Q8HaLFoCha5qpdg=
-github.com/spiegel-im-spiegel/errs v1.0.0 h1:tT/MJRUCFZWDTCTXnRFbrxzcJVsjdardQvG5LybgO/0=
-github.com/spiegel-im-spiegel/errs v1.0.0/go.mod h1:UoasJYYujMcdkbT9USv8dfZWoMyaY3btqQxoLJImw0A=
-github.com/spiegel-im-spiegel/gocli v0.10.1 h1:XWyq4dKFp2xTjiH2P2bxPZyi0++4IHp9HOksgGdfwpA=
+github.com/spiegel-im-spiegel/errs v1.0.1 h1:pRPCRvofnnF+gJA8yZH61EEs9HlpjHz87qNC8MAsJ44=
+github.com/spiegel-im-spiegel/errs v1.0.1/go.mod h1:UoasJYYujMcdkbT9USv8dfZWoMyaY3btqQxoLJImw0A=
 github.com/spiegel-im-spiegel/gocli v0.10.1/go.mod h1:9vRvly2giutJ2sAtQjrw570p9ulJA3twgKlurmnj12g=
+github.com/spiegel-im-spiegel/gocli v0.10.2 h1:e3KwLaTocagCLXpoFqZ6IApd9KPjGg3uUIiU0Bs//qM=
+github.com/spiegel-im-spiegel/gocli v0.10.2/go.mod h1:9vRvly2giutJ2sAtQjrw570p9ulJA3twgKlurmnj12g=
 github.com/spiegel-im-spiegel/gprompt v0.9.6 h1:z9FbI6dQlCXFesmxrkgR9EPwaCj/ZpSBNDKBF+NLHX0=
 github.com/spiegel-im-spiegel/gprompt v0.9.6/go.mod h1:3FzrLLlQfltS0jqtZA065/rFhOsgqogSxzvgmZb8QUE=
 github.com/stretchr/objx v0.1.0/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+wExME=
