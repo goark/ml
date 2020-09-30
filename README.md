@@ -2,6 +2,7 @@
 
 [![check vulns](https://github.com/spiegel-im-spiegel/mklink/workflows/vulns/badge.svg)](https://github.com/spiegel-im-spiegel/mklink/actions)
 [![lint status](https://github.com/spiegel-im-spiegel/mklink/workflows/lint/badge.svg)](https://github.com/spiegel-im-spiegel/mklink/actions)
+[![lint status](https://github.com/spiegel-im-spiegel/mklink/workflows/build/badge.svg)](https://github.com/spiegel-im-spiegel/mklink/actions)
 [![GitHub license](https://img.shields.io/badge/license-Apache%202-blue.svg)](https://raw.githubusercontent.com/spiegel-im-spiegel/mklink/master/LICENSE)
 [![GitHub release](http://img.shields.io/github/release/spiegel-im-spiegel/mklink.svg)](https://github.com/spiegel-im-spiegel/mklink/releases/latest)
 
