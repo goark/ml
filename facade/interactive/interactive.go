@@ -2,6 +2,7 @@ package interactive
 
 import (
 	"bytes"
+	"context"
 	"fmt"
 	"io"
 	"os"
@@ -21,7 +22,7 @@ func Do(opts *options.Options) error {
 	}
 	fmt.Println("Input 'q' or 'quit' to stop")
 	for {
-		text, err := editor.ReadLine(opts.Context())
+		text, err := editor.ReadLine(context.Background())
 		if err != nil {
 			return errs.Wrap(err)
 		}

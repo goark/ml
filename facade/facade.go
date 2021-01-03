@@ -52,6 +52,13 @@ func newRootCmd(ui *rwi.RWI, args []string) *cobra.Command {
 			if err != nil {
 				return debugPrint(ui, err)
 			}
+
+			//interactive mode
+			if interactiveFlag {
+				return interactive.Do(options.New(context.Background(), style, nil))
+			}
+
+			//command line
 			var log io.Writer
 			if len(logfile) > 0 {
 				file, err := os.Create(logfile)
@@ -63,12 +70,6 @@ func newRootCmd(ui *rwi.RWI, args []string) *cobra.Command {
 			}
 			opts := options.New(signal.Context(context.Background(), os.Interrupt), style, log)
 
-			//interactive mode
-			if interactiveFlag {
-				return interactive.Do(opts)
-			}
-
-			//command line
 			if len(args) > 0 {
 				for _, arg := range args {
 					r, err := opts.MakeLink(arg)
@@ -97,8 +98,11 @@ func newRootCmd(ui *rwi.RWI, args []string) *cobra.Command {
 			return nil
 		},
 	}
+	rootCmd.SilenceUsage = true
 	rootCmd.SetArgs(args)
-	rootCmd.SetOutput(ui.ErrorWriter())
+	rootCmd.SetIn(ui.Reader())       //Stdin
+	rootCmd.SetOut(ui.ErrorWriter()) //Stdout -> Stderr
+	rootCmd.SetErr(ui.ErrorWriter()) //Stderr
 
 	rootCmd.Flags().BoolVarP(&versionFlag, "version", "v", false, "output version of "+Name)
 	rootCmd.Flags().BoolVarP(&interactiveFlag, "interactive", "i", false, "interactive mode")

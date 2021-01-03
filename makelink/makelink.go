@@ -30,7 +30,7 @@ func New(ctx context.Context, urlStr string) (*Link, error) {
 	link := &Link{URL: urlStr}
 	resp, err := fetch.New(fetch.WithContext(ctx)).Get(urlStr)
 	if err != nil {
-		return link, errs.New("Create mklink.Link instance", errs.WithCause(err))
+		return link, errs.Wrap(err, errs.WithContext("url", urlStr))
 	}
 	defer resp.Body.Close()
 
@@ -50,7 +50,7 @@ func New(ctx context.Context, urlStr string) (*Link, error) {
 	}
 	doc, err := goquery.NewDocumentFromReader(r)
 	if err != nil {
-		return link, errs.New("Create mklink.Link instance", errs.WithCause(err))
+		return link, errs.Wrap(err)
 	}
 
 	doc.Find("head").Each(func(_ int, s *goquery.Selection) {

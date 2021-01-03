@@ -57,7 +57,7 @@ func (c *client) Get(urlStr string) (*http.Response, error) {
 	}
 	r, err := c.fetch(req)
 	if err != nil {
-		return nil, errs.Wrap(ecode.ErrInvalidRequest, errs.WithCause(err), errs.WithContext("url", u.String()))
+		return nil, errs.Wrap(err, errs.WithContext("url", u.String()))
 	}
 	return r, nil
 }
