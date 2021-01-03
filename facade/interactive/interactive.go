@@ -7,7 +7,6 @@ import (
 	"os"
 
 	"github.com/atotto/clipboard"
-	"github.com/mattn/go-colorable"
 	"github.com/spiegel-im-spiegel/errs"
 	"github.com/spiegel-im-spiegel/ml/facade/options"
 	"github.com/zetamatta/go-readline-ny"
@@ -18,7 +17,6 @@ func Do(opts *options.Options) error {
 	history := simplehistory.New()
 	editor := readline.Editor{
 		Prompt:  func() (int, error) { return fmt.Print("ml> ") },
-		Writer:  colorable.NewColorableStdout(),
 		History: history,
 	}
 	fmt.Println("Input 'q' or 'quit' to stop")
