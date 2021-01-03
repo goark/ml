@@ -1,9 +1,10 @@
-package mklink
+package makelink
 
 import (
 	"strings"
 
 	"github.com/spiegel-im-spiegel/errs"
+	"github.com/spiegel-im-spiegel/ml/ecode"
 )
 
 //Style as link style
@@ -20,6 +21,8 @@ const (
 	StyleHTML
 	//StyleCSV is CSV data format
 	StyleCSV
+	//StyleJSON is JSON format
+	StyleJSON
 )
 
 var (
@@ -28,29 +31,30 @@ var (
 		StyleWiki:     "wiki",
 		StyleHTML:     "html",
 		StyleCSV:      "csv",
+		StyleJSON:     "json",
 	}
 	styleList = []string{
 		styleMap[StyleMarkdown],
 		styleMap[StyleWiki],
 		styleMap[StyleHTML],
 		styleMap[StyleCSV],
+		styleMap[StyleJSON],
 	}
 )
 
 //StyleList returns string Style list
 func StyleList() string {
-	return strings.Join(styleList, " ")
+	return strings.Join(styleList, "|")
 }
 
 //GetStyle returns Style from string
 func GetStyle(s string) (Style, error) {
-	s = strings.ToLower(s)
 	for t, v := range styleMap {
-		if v == s {
+		if strings.EqualFold(v, s) {
 			return t, nil
 		}
 	}
-	return StyleUnknown, errs.Wrap(ErrNoImplement, errs.WithContext("style", s))
+	return StyleUnknown, errs.Wrap(ecode.ErrNoImplement, errs.WithContext("style", s))
 }
 
 func (t Style) String() string {
@@ -60,7 +64,7 @@ func (t Style) String() string {
 	return "unknown"
 }
 
-/* Copyright 2017 Spiegel
+/* Copyright 2017-2021 Spiegel
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.

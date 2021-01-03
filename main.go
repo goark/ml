@@ -4,7 +4,7 @@ import (
 	"os"
 
 	"github.com/spiegel-im-spiegel/gocli/rwi"
-	"github.com/spiegel-im-spiegel/mklink/cli/mklink/facade"
+	"github.com/spiegel-im-spiegel/ml/facade"
 )
 
 func main() {
@@ -18,7 +18,7 @@ func main() {
 	).Exit()
 }
 
-/* Copyright 2017 Spiegel
+/* Copyright 2017-2021 Spiegel
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.

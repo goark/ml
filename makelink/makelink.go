@@ -1,18 +1,19 @@
-package mklink
+package makelink
 
 import (
 	"bufio"
 	"bytes"
+	"context"
 	"encoding/json"
 	"fmt"
 	"io"
 	"io/ioutil"
-	"net/http"
 	"strings"
 
 	"github.com/PuerkitoBio/goquery"
 	encoding "github.com/mattn/go-encoding"
 	"github.com/spiegel-im-spiegel/errs"
+	"github.com/spiegel-im-spiegel/ml/fetch"
 	"golang.org/x/net/html/charset"
 )
 
@@ -25,11 +26,11 @@ type Link struct {
 }
 
 //New returns new Link instance
-func New(url string) (*Link, error) {
-	link := &Link{URL: trimString(url)}
-	resp, err := http.Get(url)
+func New(ctx context.Context, urlStr string) (*Link, error) {
+	link := &Link{URL: urlStr}
+	resp, err := fetch.New(fetch.WithContext(ctx)).Get(urlStr)
 	if err != nil {
-		return link, errs.New("Create mklink.Link instance", errs.WithCause(err))
+		return link, errs.Wrap(err, errs.WithContext("url", urlStr))
 	}
 	defer resp.Body.Close()
 
@@ -49,7 +50,7 @@ func New(url string) (*Link, error) {
 	}
 	doc, err := goquery.NewDocumentFromReader(r)
 	if err != nil {
-		return link, errs.New("Create mklink.Link instance", errs.WithCause(err))
+		return link, errs.Wrap(err)
 	}
 
 	doc.Find("head").Each(func(_ int, s *goquery.Selection) {
@@ -67,7 +68,6 @@ func New(url string) (*Link, error) {
 			}
 		})
 	})
-
 	return link, nil
 }
 
@@ -79,20 +79,6 @@ var replacer = strings.NewReplacer(
 
 func trimString(s string) string {
 	return strings.TrimSpace(replacer.Replace(s))
-}
-
-//JSON returns string (io.Reader) with JSON format
-func (lnk *Link) JSON() (io.Reader, error) {
-	if lnk == nil {
-		return ioutil.NopCloser(bytes.NewReader(nil)), nil
-	}
-	buf := new(bytes.Buffer)
-	encoder := json.NewEncoder(buf)
-	encoder.SetIndent("", "  ")
-	if err := encoder.Encode(lnk); err != nil {
-		return ioutil.NopCloser(bytes.NewReader(nil)), errs.New("error in encoding JSON", errs.WithCause(err))
-	}
-	return buf, nil
 }
 
 //TitleName returns string of title name
@@ -111,7 +97,7 @@ func (lnk *Link) Encode(t Style) io.Reader {
 	if lnk == nil {
 		return ioutil.NopCloser(bytes.NewReader(nil))
 	}
-	buf := new(bytes.Buffer)
+	buf := &bytes.Buffer{}
 	switch t {
 	case StyleMarkdown:
 		fmt.Fprintf(buf, "[%s](%s)", lnk.TitleName(), lnk.Location)
@@ -121,6 +107,8 @@ func (lnk *Link) Encode(t Style) io.Reader {
 		fmt.Fprintf(buf, "<a href=\"%s\">%s</a>", lnk.Location, lnk.TitleName())
 	case StyleCSV:
 		fmt.Fprintf(buf, "\"%s\",\"%s\",\"%s\",\"%s\"", escapeQuoteCsv(lnk.URL), escapeQuoteCsv(lnk.Location), escapeQuoteCsv(lnk.Title), escapeQuoteCsv(lnk.Description))
+	case StyleJSON:
+		_ = json.NewEncoder(buf).Encode(lnk)
 	}
 	return buf
 }
@@ -132,11 +120,10 @@ func (lnk *Link) String() string {
 	if lnk == nil {
 		return ""
 	}
-	r, _ := lnk.JSON()
-	return fmt.Sprint(r)
+	return fmt.Sprint(lnk.Encode(StyleJSON))
 }
 
-/* Copyright 2017-2020 Spiegel
+/* Copyright 2017-2021 Spiegel
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.

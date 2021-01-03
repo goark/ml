@@ -1,8 +1,8 @@
-project_name: mklink
+project_name: ml
 release:
   github:
     owner: spiegel-im-spiegel
-    name: mklink
+    name: ml
 
 builds:
 -
@@ -17,9 +17,10 @@ builds:
   - amd64
   - arm
   - arm64
-  main: ./cli/mklink/
-  ldflags: -s -w -X github.com/spiegel-im-spiegel/mklink/cli/mklink/facade.Version=v{{ .Version }}
-  binary: mklink
+  main: ./
+  flags:
+  - -trimpath
+  ldflags: -s -w -X github.com/spiegel-im-spiegel/ml/facade.Version=v{{ .Version }}
 
 archives:
 -
@@ -40,6 +41,7 @@ archives:
   files:
   - LICENSE*
   - README*
+  - dependency.png
 
 changelog:
   sort: asc

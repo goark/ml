@@ -1,85 +1,104 @@
-# [mklink] -- Make Link with Markdown Format
+# [ml] -- Make Link with Markdown Format
 
-[![check vulns](https://github.com/spiegel-im-spiegel/mklink/workflows/vulns/badge.svg)](https://github.com/spiegel-im-spiegel/mklink/actions)
-[![lint status](https://github.com/spiegel-im-spiegel/mklink/workflows/lint/badge.svg)](https://github.com/spiegel-im-spiegel/mklink/actions)
-[![lint status](https://github.com/spiegel-im-spiegel/mklink/workflows/build/badge.svg)](https://github.com/spiegel-im-spiegel/mklink/actions)
-[![GitHub license](https://img.shields.io/badge/license-Apache%202-blue.svg)](https://raw.githubusercontent.com/spiegel-im-spiegel/mklink/master/LICENSE)
-[![GitHub release](http://img.shields.io/github/release/spiegel-im-spiegel/mklink.svg)](https://github.com/spiegel-im-spiegel/mklink/releases/latest)
+[![check vulns](https://github.com/spiegel-im-spiegel/ml/workflows/vulns/badge.svg)](https://github.com/spiegel-im-spiegel/ml/actions)
+[![lint status](https://github.com/spiegel-im-spiegel/ml/workflows/lint/badge.svg)](https://github.com/spiegel-im-spiegel/ml/actions)
+[![lint status](https://github.com/spiegel-im-spiegel/ml/workflows/build/badge.svg)](https://github.com/spiegel-im-spiegel/ml/actions)
+[![GitHub license](https://img.shields.io/badge/license-Apache%202-blue.svg)](https://raw.githubusercontent.com/spiegel-im-spiegel/ml/master/LICENSE)
+[![GitHub release](http://img.shields.io/github/release/spiegel-im-spiegel/ml.svg)](https://github.com/spiegel-im-spiegel/ml/releases/latest)
 
-## Declare [mklink] module
+## Build and Install
 
-See [go.mod](https://github.com/spiegel-im-spiegel/mklink/blob/master/go.mod) file. 
+```
+$ go install github.com/spiegel-im-spiegel/gpgpdump@latest
+```
+
+## Binaries
+
+See [latest release](https://github.com/spiegel-im-spiegel/ml/releases/latest).
 
 ## Usage
 
-```go
-link, err := mklink.New("https://git.io/vFR5M")
-if err != nil {
-    fmt.Println(err)
-    return
-}
-fmt.Println(link.Encode(mklink.StyleMarkdown))
-// Output:
-// [GitHub - spiegel-im-spiegel/mklink: Make Link with Markdown Format](https://github.com/spiegel-im-spiegel/mklink)
 ```
-
-## Command Line Interface
-
-### Binaries
-
-See [latest release](https://github.com/spiegel-im-spiegel/mklink/releases/latest).
-
-### Usage
-
-```
-$ mklink -h
+$ ml -h
 Usage:
-  mklink [flags] [URL [URL]...]
+  ml [flags] [URL [URL]...]
 
 Flags:
-  -h, --help           help for mklink
+      --debug          for debug
+  -h, --help           help for ml
   -i, --interactive    interactive mode
       --log string     output log
-  -s, --style string   link style (default "markdown")
-  -v, --version        output version of mklink
+  -s, --style string   link style [markdown|wiki|html|csv|json] (default "markdown")
+  -v, --version        output version of ml
 ```
 
 ```
-$ mklink https://git.io/vFR5M
-[GitHub - spiegel-im-spiegel/mklink: Make Link with Markdown Format](https://github.com/spiegel-im-spiegel/mklink)
+$ ml https://git.io/vFR5M
+[GitHub - spiegel-im-spiegel/ml: Make Link with Markdown Format](https://github.com/spiegel-im-spiegel/ml)
 ```
 
 ```
-$ echo https://git.io/vFR5M | mklink
-[GitHub - spiegel-im-spiegel/mklink: Make Link with Markdown Format](https://github.com/spiegel-im-spiegel/mklink)
+$ echo https://git.io/vFR5M | ml
+[GitHub - spiegel-im-spiegel/ml: Make Link with Markdown Format](https://github.com/spiegel-im-spiegel/ml)
 ```
 
+### Support Other Styles
+
 ```
-$ mklink --log log.txt https://git.io/vFR5M
-[GitHub - spiegel-im-spiegel/mklink: Make Link with Markdown Format](https://github.com/spiegel-im-spiegel/mklink)
+$ ml -s html https://git.io/vFR5M
+<a href="https://github.com/spiegel-im-spiegel/ml">GitHub - spiegel-im-spiegel/ml: Make Link with Markdown Format</a>
+```
+
+Support Styles: `markdown`, `wiki`, `html`, `csv`, `json`
+
+### logging
+
+```
+$ ml --log log.txt https://git.io/vFR5M
+[GitHub - spiegel-im-spiegel/ml: Make Link with Markdown Format](https://github.com/spiegel-im-spiegel/ml)
 
 $ cat log.txt
-[GitHub - spiegel-im-spiegel/mklink: Make Link with Markdown Format](https://github.com/spiegel-im-spiegel/mklink)
+[GitHub - spiegel-im-spiegel/ml: Make Link with Markdown Format](https://github.com/spiegel-im-spiegel/ml)
 ```
 
 ### Interactive Mode
 
 ```
-$ mklink -i
+$ ml -i
 Input 'q' or 'quit' to stop
-mklimk> https://git.io/vFR5M
-[GitHub - spiegel-im-spiegel/mklink: Make Link with Markdown Format](https://github.com/spiegel-im-spiegel/mklink)
-mklimk>
+ml> https://git.io/vFR5M
+[GitHub - spiegel-im-spiegel/ml: Make Link with Markdown Format](https://github.com/spiegel-im-spiegel/ml)
+ml>
 ```
 
-### Support Other Style
+## With Go Codes
 
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "io"
+    "os"
+
+    "github.com/spiegel-im-spiegel/ml/makelink"
+)
+
+func main() {
+    lnk, err := makelink.New(context.Background(), "https://git.io/vFR5M")
+    if err != nil {
+        fmt.Fprintln(os.Stderr, err)
+        return
+    }
+    _, _ = io.Copy(os.Stdout, lnk.Encode(makelink.StyleMarkdown))
+    // Output:
+    // [GitHub - spiegel-im-spiegel/ml: Make Link with Markdown Format](https://github.com/spiegel-im-spiegel/ml)
+}
 ```
-$ mklink -s html https://git.io/vFR5M
-<a href="https://github.com/spiegel-im-spiegel/mklink">GitHub - spiegel-im-spiegel/mklink: Make Link with Markdown Format</a>
-```
 
-Support: `markdown`, `wiki`, `html`, `csv`
+## Modules Requirement Graph
 
-[mklink]: https://github.com/spiegel-im-spiegel/mklink "spiegel-im-spiegel/mklink: Make Link with Markdown Format"
-[dep]: https://github.com/golang/dep "golang/dep: Go dependency management tool"
+[![dependency.png](./dependency.png)](./dependency.png)
+
+[ml]: https://github.com/spiegel-im-spiegel/ml "spiegel-im-spiegel/ml: Make Link with Markdown Format"

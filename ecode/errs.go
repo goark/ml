@@ -1,31 +1,30 @@
-package mklink
+package ecode
 
-import (
-	"fmt"
-	"testing"
+import "fmt"
+
+//ECode is error ECodeber for "spiegel-im-spiegel/ml/ecode/..." packages
+type ECode int
+
+const (
+	ErrNullPointer ECode = iota + 1
+	ErrNoImplement
+	ErrInvalidRequest
 )
 
-func TestNumError(t *testing.T) {
-	testCases := []struct {
-		err error
-		str string
-	}{
-		{err: Num(0), str: "unknown error (0)"},
-		{err: ErrNoImplement, str: "This style is not implementation"},
-		{err: ErrNullPointer, str: "Null reference instance"},
-		{err: Num(3), str: "unknown error (3)"},
-	}
-
-	for _, tc := range testCases {
-		errStr := tc.err.Error()
-		if errStr != tc.str {
-			t.Errorf("\"%v\" != \"%v\"", errStr, tc.str)
-		}
-		fmt.Printf("Info(TestNumError): %+v\n", tc.err)
-	}
+var errMessage = map[ECode]string{
+	ErrNullPointer:    "Null reference instance",
+	ErrNoImplement:    "This style is not implementation",
+	ErrInvalidRequest: "invalid request",
 }
 
-/* Copyright 2019 Spiegel
+func (n ECode) Error() string {
+	if s, ok := errMessage[n]; ok {
+		return s
+	}
+	return fmt.Sprintf("unknown error (%d)", int(n))
+}
+
+/* Copyright 2019-2021 Spiegel
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.

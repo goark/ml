@@ -9,7 +9,7 @@ import (
 )
 
 func TestVersionMin(t *testing.T) {
-	result := "mklink dev-version\n"
+	result := "ml dev-version\n"
 
 	outBuf := new(bytes.Buffer)
 	outErrBuf := new(bytes.Buffer)
