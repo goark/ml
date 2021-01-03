@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"strings"
 
 	"github.com/atotto/clipboard"
 	"github.com/spiegel-im-spiegel/errs"
@@ -32,7 +33,11 @@ func Do(opts *options.Options) error {
 		history.Add(text)
 		r, err := opts.MakeLink(text)
 		if err != nil {
-			fmt.Println(errs.Cause(err).Error())
+			errStr := errs.Cause(err).Error()
+			if strings.Contains(errStr, "context canceled") {
+				return errs.Wrap(err)
+			}
+			fmt.Println(errStr)
 		} else {
 			buf := &bytes.Buffer{}
 			if _, err := io.Copy(os.Stdout, io.TeeReader(r, buf)); err != nil {

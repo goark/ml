@@ -48,17 +48,11 @@ func newRootCmd(ui *rwi.RWI, args []string) *cobra.Command {
 				return debugPrint(ui, err)
 			}
 
+			//log file
 			logfile, err := cmd.Flags().GetString("log")
 			if err != nil {
 				return debugPrint(ui, err)
 			}
-
-			//interactive mode
-			if interactiveFlag {
-				return interactive.Do(options.New(context.Background(), style, nil))
-			}
-
-			//command line
 			var log io.Writer
 			if len(logfile) > 0 {
 				file, err := os.Create(logfile)
@@ -68,8 +62,16 @@ func newRootCmd(ui *rwi.RWI, args []string) *cobra.Command {
 				defer file.Close()
 				log = file
 			}
+
+			//set options
 			opts := options.New(signal.Context(context.Background(), os.Interrupt), style, log)
 
+			//interactive mode
+			if interactiveFlag {
+				return interactive.Do(opts)
+			}
+
+			//command line
 			if len(args) > 0 {
 				for _, arg := range args {
 					r, err := opts.MakeLink(arg)
