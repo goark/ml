@@ -1,9 +1,11 @@
-package mklink
+package makelink
 
 import (
 	"errors"
 	"fmt"
 	"testing"
+
+	"github.com/spiegel-im-spiegel/ml/ecode"
 )
 
 type typesTestCase struct {
@@ -32,8 +34,8 @@ func TestGetStyle(t *testing.T) {
 func TestGetStyleErr(t *testing.T) {
 	tps, err := GetStyle("foobar")
 	fmt.Printf("Info(TestGetStyleErr): %+v\n", err)
-	if !errors.Is(err, ErrNoImplement) {
-		t.Errorf("GetStyles(foobar) error = \"%v\", want \"%v\".", err, ErrNoImplement)
+	if !errors.Is(err, ecode.ErrNoImplement) {
+		t.Errorf("GetStyles(foobar) error = \"%v\", want \"%v\".", err, ecode.ErrNoImplement)
 	} else if tps.String() != "unknown" {
 		t.Errorf("GetStyles(foobar) = \"%v\", want \"unknown\".", tps)
 	}
@@ -41,13 +43,13 @@ func TestGetStyleErr(t *testing.T) {
 
 func TestStyleList(t *testing.T) {
 	str := StyleList()
-	res := "markdown wiki html csv"
+	res := "markdown|wiki|html|csv|json"
 	if str != res {
 		t.Errorf("StylesList() = \"%v\", want \"%v\".", str, res)
 	}
 }
 
-/* Copyright 2017 Spiegel
+/* Copyright 2017-2021 Spiegel
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.

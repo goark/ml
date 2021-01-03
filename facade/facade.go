@@ -2,6 +2,7 @@ package facade
 
 import (
 	"bufio"
+	"context"
 	"io"
 	"os"
 	"runtime"
@@ -9,83 +10,85 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spiegel-im-spiegel/gocli/exitcode"
 	"github.com/spiegel-im-spiegel/gocli/rwi"
-	"github.com/spiegel-im-spiegel/mklink"
-	"github.com/spiegel-im-spiegel/mklink/cli/mklink/makelink"
+	"github.com/spiegel-im-spiegel/gocli/signal"
+	"github.com/spiegel-im-spiegel/ml/facade/interactive"
+	"github.com/spiegel-im-spiegel/ml/facade/options"
+	"github.com/spiegel-im-spiegel/ml/makelink"
 )
 
 var (
 	//Name is applicatin name
-	Name = "mklink"
+	Name = "ml"
 	//Version is version for applicatin
 	Version = "dev-version"
 )
 
 var (
-	defaultStyle    = mklink.StyleMarkdown.String() //default link style
-	versionFlag     bool                            //version flag
-	interactiveFlag bool                            //interactive mode flag
-	cui             = rwi.New()                     //CUI instance
+	versionFlag     bool //version flag
+	interactiveFlag bool //interactive mode flag
+	debugFlag       bool //debug flag
 )
 
 //newRootCmd returns cobra.Command instance for root command
 func newRootCmd(ui *rwi.RWI, args []string) *cobra.Command {
-	cui = ui
 	rootCmd := &cobra.Command{
 		Use: Name + " [flags] [URL [URL]...]",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			//parse options
 			if versionFlag {
-				return cui.OutputErrln(Name, Version)
+				return ui.OutputErrln(Name, Version)
 			}
 
 			strStyle, err := cmd.Flags().GetString("style")
 			if err != nil {
-				return err
+				return debugPrint(ui, err)
 			}
-			style, err := mklink.GetStyle(strStyle)
+			style, err := makelink.GetStyle(strStyle)
 			if err != nil {
-				return err
+				return debugPrint(ui, err)
 			}
 
 			logfile, err := cmd.Flags().GetString("log")
 			if err != nil {
-				return err
+				return debugPrint(ui, err)
 			}
 			var log io.Writer
 			if len(logfile) > 0 {
 				file, err := os.Create(logfile)
 				if err != nil {
-					return err
+					return debugPrint(ui, err)
 				}
 				defer file.Close()
 				log = file
 			}
+			opts := options.New(signal.Context(context.Background(), os.Interrupt), style, log)
 
-			lnk := makelink.New(style, log)
+			//interactive mode
 			if interactiveFlag {
-				return interactiveMode(ui, lnk)
+				return interactive.Do(opts)
 			}
 
+			//command line
 			if len(args) > 0 {
 				for _, arg := range args {
-					r, err := lnk.MakeLink(arg)
+					r, err := opts.MakeLink(arg)
 					if err != nil {
-						return err
+						return debugPrint(ui, err)
 					}
 					if err := ui.WriteFrom(r); err != nil {
-						return err
+						return debugPrint(ui, err)
 					}
 					_ = ui.Outputln()
 				}
 			} else {
-				scanner := bufio.NewScanner(cui.Reader())
+				scanner := bufio.NewScanner(ui.Reader())
 				for scanner.Scan() {
-					r, err := lnk.MakeLink(scanner.Text())
+					r, err := opts.MakeLink(scanner.Text())
 					if err != nil {
-						return err
+						return debugPrint(ui, err)
 					}
 					if err := ui.WriteFrom(r); err != nil {
-						return err
+						return debugPrint(ui, err)
 					}
 					_ = ui.Outputln()
 				}
@@ -99,7 +102,8 @@ func newRootCmd(ui *rwi.RWI, args []string) *cobra.Command {
 
 	rootCmd.Flags().BoolVarP(&versionFlag, "version", "v", false, "output version of "+Name)
 	rootCmd.Flags().BoolVarP(&interactiveFlag, "interactive", "i", false, "interactive mode")
-	rootCmd.Flags().StringP("style", "s", defaultStyle, "link style")
+	rootCmd.Flags().BoolVarP(&debugFlag, "debug", "", false, "for debug")
+	rootCmd.Flags().StringP("style", "s", makelink.StyleMarkdown.String(), "link style ["+makelink.StyleList()+"]")
 	rootCmd.Flags().StringP("log", "", "", "output log")
 
 	return rootCmd
@@ -110,13 +114,13 @@ func Execute(ui *rwi.RWI, args []string) (exit exitcode.ExitCode) {
 	defer func() {
 		//panic hundling
 		if r := recover(); r != nil {
-			_ = cui.OutputErrln("Panic:", r)
+			_ = ui.OutputErrln("Panic:", r)
 			for depth := 0; ; depth++ {
 				pc, _, line, ok := runtime.Caller(depth)
 				if !ok {
 					break
 				}
-				_ = cui.OutputErrln(" ->", depth, ":", runtime.FuncForPC(pc).Name(), ": line", line)
+				_ = ui.OutputErrln(" ->", depth, ":", runtime.FuncForPC(pc).Name(), ": line", line)
 			}
 			exit = exitcode.Abnormal
 		}
@@ -130,7 +134,7 @@ func Execute(ui *rwi.RWI, args []string) (exit exitcode.ExitCode) {
 	return
 }
 
-/* Copyright 2017-2019 Spiegel
+/* Copyright 2017-2021 Spiegel
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.

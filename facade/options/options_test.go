@@ -1,18 +1,20 @@
-package makelink
+package options_test
 
 import (
 	"bytes"
+	"context"
 	"fmt"
 	"io"
 	"os"
 	"testing"
 
-	"github.com/spiegel-im-spiegel/mklink"
+	"github.com/spiegel-im-spiegel/ml/facade/options"
+	"github.com/spiegel-im-spiegel/ml/makelink"
 )
 
 func TestMakeLink(t *testing.T) {
 	logBuf := new(bytes.Buffer)
-	rRes, err := New(mklink.StyleMarkdown, logBuf).MakeLink("https://git.io/vFR5M")
+	rRes, err := options.New(context.Background(), makelink.StyleMarkdown, logBuf).MakeLink("https://git.io/vFR5M")
 	if err != nil {
 		t.Errorf("Error in Context.MakeLink(): %+v", err)
 	}
@@ -21,7 +23,7 @@ func TestMakeLink(t *testing.T) {
 		t.Errorf("Error in io.Copy(): %+v", err)
 	}
 
-	res := "[GitHub - spiegel-im-spiegel/mklink: Make Link with Markdown Format](https://github.com/spiegel-im-spiegel/mklink)"
+	res := "[GitHub - spiegel-im-spiegel/ml: Make Link with Markdown Format](https://github.com/spiegel-im-spiegel/ml)"
 	str := outBuf.String()
 	if str != res {
 		t.Errorf("Context.MakeLink()  = \"%v\", want \"%v\".", str, res)
@@ -33,7 +35,7 @@ func TestMakeLink(t *testing.T) {
 }
 
 func TestMakeLinkNil(t *testing.T) {
-	rRes, err := New(mklink.StyleMarkdown, nil).MakeLink("https://git.io/vFR5M")
+	rRes, err := options.New(context.Background(), makelink.StyleMarkdown, nil).MakeLink("https://git.io/vFR5M")
 	if err != nil {
 		t.Errorf("Error in Context.MakeLink(): %+v", err)
 	}
@@ -42,7 +44,7 @@ func TestMakeLinkNil(t *testing.T) {
 		t.Errorf("Error in io.Copy(): %+v", err)
 	}
 
-	res := "[GitHub - spiegel-im-spiegel/mklink: Make Link with Markdown Format](https://github.com/spiegel-im-spiegel/mklink)"
+	res := "[GitHub - spiegel-im-spiegel/ml: Make Link with Markdown Format](https://github.com/spiegel-im-spiegel/ml)"
 	str := outBuf.String()
 	if str != res {
 		t.Errorf("Context.MakeLink()  = \"%v\", want \"%v\".", str, res)
@@ -50,7 +52,7 @@ func TestMakeLinkNil(t *testing.T) {
 }
 
 func TestMakeLinkErr(t *testing.T) {
-	_, err := New(mklink.StyleMarkdown, nil).MakeLink("https://foo.bar")
+	_, err := options.New(context.Background(), makelink.StyleMarkdown, nil).MakeLink("https://foo.bar")
 	if err == nil {
 		t.Error("Context.MakeLink() = nil error, not want nil error.")
 	} else {
@@ -58,7 +60,7 @@ func TestMakeLinkErr(t *testing.T) {
 	}
 }
 
-/* Copyright 2017-2019 Spiegel
+/* Copyright 2017-2021 Spiegel
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
