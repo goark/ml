@@ -38,7 +38,8 @@ func (hf *HistoryFile) Save() error {
 	if hf == nil || hf.Size() == 0 || len(hf.path) == 0 {
 		return nil
 	}
-	file, err := os.Create(hf.path)
+	// file, err := os.Create(hf.path)
+	file, err := os.OpenFile(hf.path, os.O_RDWR|os.O_CREATE, 0600)
 	if err != nil {
 		return errs.Wrap(err)
 	}
