@@ -8,17 +8,19 @@ import (
 	"os"
 	"testing"
 
+	"github.com/spiegel-im-spiegel/ml/facade/history"
 	"github.com/spiegel-im-spiegel/ml/facade/options"
 	"github.com/spiegel-im-spiegel/ml/makelink"
 )
 
 func TestMakeLink(t *testing.T) {
-	logBuf := new(bytes.Buffer)
-	rRes, err := options.New(context.Background(), makelink.StyleMarkdown, logBuf).MakeLink("https://git.io/vFR5M")
+	urlStr := "https://git.io/vFR5M"
+	opt := options.New(context.Background(), makelink.StyleMarkdown, history.NewFile(1, ""))
+	rRes, err := opt.MakeLink(urlStr)
 	if err != nil {
 		t.Errorf("Error in Context.MakeLink(): %+v", err)
 	}
-	outBuf := new(bytes.Buffer)
+	outBuf := &bytes.Buffer{}
 	if _, err := io.Copy(outBuf, rRes); err != nil {
 		t.Errorf("Error in io.Copy(): %+v", err)
 	}
@@ -26,11 +28,11 @@ func TestMakeLink(t *testing.T) {
 	res := "[GitHub - spiegel-im-spiegel/ml: Make Link with Markdown Format](https://github.com/spiegel-im-spiegel/ml)"
 	str := outBuf.String()
 	if str != res {
-		t.Errorf("Context.MakeLink()  = \"%v\", want \"%v\".", str, res)
+		t.Errorf("Context.MakeLink() = \"%v\", want \"%v\".", str, res)
 	}
-	str = logBuf.String()
-	if str != res+"\n" {
-		t.Errorf("Context.MakeLink()  = \"%v\", want \"%v\".", str, res+"\n")
+	h := opt.History().At(0)
+	if h != urlStr {
+		t.Errorf("Histtory(0) = \"%v\" (%v), want \"%v\".", h, opt.History().Len(), urlStr)
 	}
 }
 

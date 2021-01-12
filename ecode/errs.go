@@ -1,28 +1,12 @@
 package ecode
 
-import "fmt"
+import "errors"
 
-//ECode is error ECodeber for "spiegel-im-spiegel/ml/ecode/..." packages
-type ECode int
-
-const (
-	ErrNullPointer ECode = iota + 1
-	ErrNoImplement
-	ErrInvalidRequest
+var (
+	ErrNullPointer    = errors.New("Null reference instance")
+	ErrNoImplement    = errors.New("This style is not implementation")
+	ErrInvalidRequest = errors.New("invalid request")
 )
-
-var errMessage = map[ECode]string{
-	ErrNullPointer:    "Null reference instance",
-	ErrNoImplement:    "This style is not implementation",
-	ErrInvalidRequest: "invalid request",
-}
-
-func (n ECode) Error() string {
-	if s, ok := errMessage[n]; ok {
-		return s
-	}
-	return fmt.Sprintf("unknown error (%d)", int(n))
-}
 
 /* Copyright 2019-2021 Spiegel
 *

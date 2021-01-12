@@ -3,7 +3,6 @@ package facade
 import (
 	"bufio"
 	"context"
-	"io"
 	"os"
 	"runtime"
 
@@ -11,6 +10,7 @@ import (
 	"github.com/spiegel-im-spiegel/gocli/exitcode"
 	"github.com/spiegel-im-spiegel/gocli/rwi"
 	"github.com/spiegel-im-spiegel/gocli/signal"
+	"github.com/spiegel-im-spiegel/ml/facade/history"
 	"github.com/spiegel-im-spiegel/ml/facade/interactive"
 	"github.com/spiegel-im-spiegel/ml/facade/options"
 	"github.com/spiegel-im-spiegel/ml/makelink"
@@ -48,54 +48,59 @@ func newRootCmd(ui *rwi.RWI, args []string) *cobra.Command {
 				return debugPrint(ui, err)
 			}
 
-			//log file
-			logfile, err := cmd.Flags().GetString("log")
+			//log size
+			log, err := cmd.Flags().GetInt("log")
 			if err != nil {
 				return debugPrint(ui, err)
 			}
-			var log io.Writer
-			if len(logfile) > 0 {
-				file, err := os.Create(logfile)
-				if err != nil {
-					return debugPrint(ui, err)
+			hist := history.NewFile(log, historyPath())
+			if log > 0 {
+				if err := mkdirHistory(); err != nil {
+					_ = ui.OutputErrln(err)
+				} else if err := hist.Load(); err != nil {
+					_ = ui.OutputErrln(err)
 				}
-				defer file.Close()
-				log = file
 			}
 
 			//set options
-			opts := options.New(signal.Context(context.Background(), os.Interrupt), style, log)
+			opts := options.New(signal.Context(context.Background(), os.Interrupt), style, hist)
 
-			//interactive mode
 			if interactiveFlag {
-				return interactive.Do(opts)
-			}
-
-			//command line
-			if len(args) > 0 {
-				for _, arg := range args {
-					r, err := opts.MakeLink(arg)
-					if err != nil {
-						return debugPrint(ui, err)
-					}
-					if err := ui.WriteFrom(r); err != nil {
-						return debugPrint(ui, err)
-					}
-					_ = ui.Outputln()
+				//interactive mode
+				if err := interactive.Do(opts); err != nil {
+					return debugPrint(ui, err)
 				}
 			} else {
-				scanner := bufio.NewScanner(ui.Reader())
-				for scanner.Scan() {
-					r, err := opts.MakeLink(scanner.Text())
-					if err != nil {
-						return debugPrint(ui, err)
+				//command line
+				if len(args) > 0 {
+					for _, arg := range args {
+						r, err := opts.MakeLink(arg)
+						if err != nil {
+							return debugPrint(ui, err)
+						}
+						if err := ui.WriteFrom(r); err != nil {
+							return debugPrint(ui, err)
+						}
+						_ = ui.Outputln()
 					}
-					if err := ui.WriteFrom(r); err != nil {
-						return debugPrint(ui, err)
+				} else {
+					scanner := bufio.NewScanner(ui.Reader())
+					for scanner.Scan() {
+						r, err := opts.MakeLink(scanner.Text())
+						if err != nil {
+							return debugPrint(ui, err)
+						}
+						if err := ui.WriteFrom(r); err != nil {
+							return debugPrint(ui, err)
+						}
+						_ = ui.Outputln()
 					}
-					_ = ui.Outputln()
+					return scanner.Err()
 				}
-				return scanner.Err()
+			}
+
+			if err := hist.Save(); err != nil {
+				return debugPrint(ui, err)
 			}
 			return nil
 		},
@@ -110,7 +115,7 @@ func newRootCmd(ui *rwi.RWI, args []string) *cobra.Command {
 	rootCmd.Flags().BoolVarP(&interactiveFlag, "interactive", "i", false, "interactive mode")
 	rootCmd.Flags().BoolVarP(&debugFlag, "debug", "", false, "for debug")
 	rootCmd.Flags().StringP("style", "s", makelink.StyleMarkdown.String(), "link style ["+makelink.StyleList()+"]")
-	rootCmd.Flags().StringP("log", "", "", "output log")
+	rootCmd.Flags().IntP("log", "l", 0, "log size")
 
 	return rootCmd
 }
