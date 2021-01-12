@@ -63,7 +63,7 @@ func newRootCmd(ui *rwi.RWI, args []string) *cobra.Command {
 			}
 
 			//set options
-			opts := options.New(signal.Context(context.Background(), os.Interrupt), style, hist)
+			opts := options.New(style, hist)
 
 			if interactiveFlag {
 				//interactive mode
@@ -72,9 +72,10 @@ func newRootCmd(ui *rwi.RWI, args []string) *cobra.Command {
 				}
 			} else {
 				//command line
+				ctx := signal.Context(context.Background(), os.Interrupt)
 				if len(args) > 0 {
 					for _, arg := range args {
-						r, err := opts.MakeLink(arg)
+						r, err := opts.MakeLink(ctx, arg)
 						if err != nil {
 							return debugPrint(ui, err)
 						}
@@ -86,7 +87,7 @@ func newRootCmd(ui *rwi.RWI, args []string) *cobra.Command {
 				} else {
 					scanner := bufio.NewScanner(ui.Reader())
 					for scanner.Scan() {
-						r, err := opts.MakeLink(scanner.Text())
+						r, err := opts.MakeLink(ctx, scanner.Text())
 						if err != nil {
 							return debugPrint(ui, err)
 						}

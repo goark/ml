@@ -9,6 +9,7 @@ import (
 
 	"github.com/atotto/clipboard"
 	"github.com/spiegel-im-spiegel/errs"
+	"github.com/spiegel-im-spiegel/gocli/signal"
 	"github.com/spiegel-im-spiegel/ml/facade/options"
 	"github.com/zetamatta/go-readline-ny"
 )
@@ -18,6 +19,7 @@ func Do(opts *options.Options) error {
 		Prompt:  func() (int, error) { return fmt.Print("ml> ") },
 		History: opts.History(),
 	}
+	ctx := signal.Context(context.Background(), os.Interrupt)
 	fmt.Println("Input 'q' or 'quit' to stop")
 	for {
 		text, err := editor.ReadLine(context.Background())
@@ -27,7 +29,7 @@ func Do(opts *options.Options) error {
 		if text == "q" || text == "quit" {
 			return nil
 		}
-		r, err := opts.MakeLink(text)
+		r, err := opts.MakeLink(ctx, text)
 		if err != nil {
 			errStr := errs.Cause(err).Error()
 			if errs.Is(err, context.Canceled) {

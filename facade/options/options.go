@@ -12,38 +12,32 @@ import (
 
 //Options class is Options for making link
 type Options struct {
-	ctx       context.Context
 	linkStyle makelink.Style
 	hist      *history.HistoryFile
 }
 
 //New returns new Options instance
-func New(ctx context.Context, s makelink.Style, hist *history.HistoryFile) *Options {
+func New(s makelink.Style, hist *history.HistoryFile) *Options {
 	if hist == nil {
 		hist = history.NewFile(0, "")
 	}
-	return &Options{ctx: ctx, linkStyle: s, hist: hist}
+	return &Options{linkStyle: s, hist: hist}
 }
 
 //History method returns history.HistoryFile instance.
 func (c *Options) History() *history.HistoryFile { return c.hist }
 
 //MakeLink is making link
-func (c *Options) MakeLink(urlStr string) (io.Reader, error) {
+func (c *Options) MakeLink(ctx context.Context, urlStr string) (io.Reader, error) {
 	if c == nil {
 		return nil, errs.Wrap(ecode.ErrNullPointer)
 	}
 	c.History().Add(urlStr)
-	lnk, err := makelink.New(c.ctx, urlStr)
+	lnk, err := makelink.New(ctx, urlStr)
 	if err != nil {
 		return nil, errs.Wrap(err)
 	}
 	return lnk.Encode(c.linkStyle), nil
-}
-
-//Context returns context.Context instance in Options.
-func (c *Options) Context() context.Context {
-	return c.ctx
 }
 
 /* Copyright 2017-2021 Spiegel
