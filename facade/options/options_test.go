@@ -8,17 +8,19 @@ import (
 	"os"
 	"testing"
 
+	"github.com/spiegel-im-spiegel/ml/facade/history"
 	"github.com/spiegel-im-spiegel/ml/facade/options"
 	"github.com/spiegel-im-spiegel/ml/makelink"
 )
 
 func TestMakeLink(t *testing.T) {
-	logBuf := new(bytes.Buffer)
-	rRes, err := options.New(context.Background(), makelink.StyleMarkdown, logBuf).MakeLink("https://git.io/vFR5M")
+	urlStr := "https://git.io/vFR5M"
+	opt := options.New(makelink.StyleMarkdown, history.NewFile(1, ""))
+	rRes, err := opt.MakeLink(context.Background(), urlStr)
 	if err != nil {
 		t.Errorf("Error in Context.MakeLink(): %+v", err)
 	}
-	outBuf := new(bytes.Buffer)
+	outBuf := &bytes.Buffer{}
 	if _, err := io.Copy(outBuf, rRes); err != nil {
 		t.Errorf("Error in io.Copy(): %+v", err)
 	}
@@ -26,16 +28,16 @@ func TestMakeLink(t *testing.T) {
 	res := "[GitHub - spiegel-im-spiegel/ml: Make Link with Markdown Format](https://github.com/spiegel-im-spiegel/ml)"
 	str := outBuf.String()
 	if str != res {
-		t.Errorf("Context.MakeLink()  = \"%v\", want \"%v\".", str, res)
+		t.Errorf("Context.MakeLink() = \"%v\", want \"%v\".", str, res)
 	}
-	str = logBuf.String()
-	if str != res+"\n" {
-		t.Errorf("Context.MakeLink()  = \"%v\", want \"%v\".", str, res+"\n")
+	h := opt.History().At(0)
+	if h != urlStr {
+		t.Errorf("Histtory(0) = \"%v\" (%v), want \"%v\".", h, opt.History().Len(), urlStr)
 	}
 }
 
 func TestMakeLinkNil(t *testing.T) {
-	rRes, err := options.New(context.Background(), makelink.StyleMarkdown, nil).MakeLink("https://git.io/vFR5M")
+	rRes, err := options.New(makelink.StyleMarkdown, nil).MakeLink(context.Background(), "https://git.io/vFR5M")
 	if err != nil {
 		t.Errorf("Error in Context.MakeLink(): %+v", err)
 	}
@@ -52,7 +54,7 @@ func TestMakeLinkNil(t *testing.T) {
 }
 
 func TestMakeLinkErr(t *testing.T) {
-	_, err := options.New(context.Background(), makelink.StyleMarkdown, nil).MakeLink("https://foo.bar")
+	_, err := options.New(makelink.StyleMarkdown, nil).MakeLink(context.Background(), "https://foo.bar")
 	if err == nil {
 		t.Error("Context.MakeLink() = nil error, not want nil error.")
 	} else {

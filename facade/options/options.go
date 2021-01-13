@@ -1,53 +1,43 @@
 package options
 
 import (
-	"bytes"
 	"context"
-	"fmt"
 	"io"
 
 	"github.com/spiegel-im-spiegel/errs"
 	"github.com/spiegel-im-spiegel/ml/ecode"
+	"github.com/spiegel-im-spiegel/ml/facade/history"
 	"github.com/spiegel-im-spiegel/ml/makelink"
 )
 
 //Options class is Options for making link
 type Options struct {
-	ctx       context.Context
 	linkStyle makelink.Style
-	log       io.Writer
+	hist      *history.HistoryFile
 }
 
 //New returns new Options instance
-func New(ctx context.Context, s makelink.Style, log io.Writer) *Options {
-	return &Options{ctx: ctx, linkStyle: s, log: log}
+func New(s makelink.Style, hist *history.HistoryFile) *Options {
+	if hist == nil {
+		hist = history.NewFile(0, "")
+	}
+	return &Options{linkStyle: s, hist: hist}
 }
 
+//History method returns history.HistoryFile instance.
+func (c *Options) History() *history.HistoryFile { return c.hist }
+
 //MakeLink is making link
-func (c *Options) MakeLink(urlStr string) (io.Reader, error) {
+func (c *Options) MakeLink(ctx context.Context, urlStr string) (io.Reader, error) {
 	if c == nil {
 		return nil, errs.Wrap(ecode.ErrNullPointer)
 	}
-	lnk, err := makelink.New(c.ctx, urlStr)
+	c.History().Add(urlStr)
+	lnk, err := makelink.New(ctx, urlStr)
 	if err != nil {
 		return nil, errs.Wrap(err)
 	}
-
-	rRes := lnk.Encode(c.linkStyle)
-	if c.log != nil {
-		buf := &bytes.Buffer{}
-		if _, err := io.Copy(c.log, io.TeeReader(rRes, buf)); err != nil {
-			return buf, errs.New("error in logging", errs.WithCause(err))
-		}
-		fmt.Fprintln(c.log) //new line in logfile
-		return buf, nil
-	}
-	return rRes, nil
-}
-
-//Context returns context.Context instance in Options.
-func (c *Options) Context() context.Context {
-	return c.ctx
+	return lnk.Encode(c.linkStyle), nil
 }
 
 /* Copyright 2017-2021 Spiegel

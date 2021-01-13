@@ -8,12 +8,13 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
+	"net/http"
 	"strings"
 
 	"github.com/PuerkitoBio/goquery"
 	encoding "github.com/mattn/go-encoding"
 	"github.com/spiegel-im-spiegel/errs"
-	"github.com/spiegel-im-spiegel/ml/fetch"
+	"github.com/spiegel-im-spiegel/fetch"
 	"golang.org/x/net/html/charset"
 )
 
@@ -28,18 +29,22 @@ type Link struct {
 //New returns new Link instance
 func New(ctx context.Context, urlStr string) (*Link, error) {
 	link := &Link{URL: urlStr}
-	resp, err := fetch.New(fetch.WithContext(ctx)).Get(urlStr)
+	u, err := fetch.URL(urlStr)
 	if err != nil {
 		return link, errs.Wrap(err, errs.WithContext("url", urlStr))
 	}
-	defer resp.Body.Close()
+	resp, err := fetch.New(fetch.WithHTTPClient(&http.Client{})).Get(u, fetch.WithContext(ctx))
+	if err != nil {
+		return link, errs.Wrap(err, errs.WithContext("url", urlStr))
+	}
+	defer resp.Close()
 
-	link.Location = resp.Request.URL.String()
+	link.Location = resp.Request().URL.String()
 
-	br := bufio.NewReader(resp.Body)
+	br := bufio.NewReader(resp.Body())
 	var r io.Reader = br
 	if data, err2 := br.Peek(1024); err2 == nil { //next 1024 bytes without advancing the reader.
-		enc, name, _ := charset.DetermineEncoding(data, resp.Header.Get("content-type"))
+		enc, name, _ := charset.DetermineEncoding(data, resp.Header().Get("content-type"))
 		if enc != nil {
 			r = enc.NewDecoder().Reader(br)
 		} else if len(name) > 0 {
