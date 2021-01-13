@@ -33,21 +33,18 @@ func New(ctx context.Context, urlStr string) (*Link, error) {
 	if err != nil {
 		return link, errs.Wrap(err, errs.WithContext("url", urlStr))
 	}
-	resp, err := fetch.New(
-		fetch.WithHTTPClient(&http.Client{}),
-		fetch.WithContext(ctx),
-	).Get(u)
+	resp, err := fetch.New(fetch.WithHTTPClient(&http.Client{})).Get(u, fetch.WithContext(ctx))
 	if err != nil {
 		return link, errs.Wrap(err, errs.WithContext("url", urlStr))
 	}
-	defer resp.Body.Close()
+	defer resp.Close()
 
-	link.Location = resp.Request.URL.String()
+	link.Location = resp.Request().URL.String()
 
-	br := bufio.NewReader(resp.Body)
+	br := bufio.NewReader(resp.Body())
 	var r io.Reader = br
 	if data, err2 := br.Peek(1024); err2 == nil { //next 1024 bytes without advancing the reader.
-		enc, name, _ := charset.DetermineEncoding(data, resp.Header.Get("content-type"))
+		enc, name, _ := charset.DetermineEncoding(data, resp.Header().Get("content-type"))
 		if enc != nil {
 			r = enc.NewDecoder().Reader(br)
 		} else if len(name) > 0 {

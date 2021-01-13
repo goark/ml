@@ -116,7 +116,7 @@ func newRootCmd(ui *rwi.RWI, args []string) *cobra.Command {
 	rootCmd.Flags().BoolVarP(&interactiveFlag, "interactive", "i", false, "interactive mode")
 	rootCmd.Flags().BoolVarP(&debugFlag, "debug", "", false, "for debug")
 	rootCmd.Flags().StringP("style", "s", makelink.StyleMarkdown.String(), "link style ["+makelink.StyleList()+"]")
-	rootCmd.Flags().IntP("log", "l", 0, "log size")
+	rootCmd.Flags().IntP("log", "l", 0, "history log size")
 
 	return rootCmd
 }

@@ -27,7 +27,7 @@ Flags:
       --debug          for debug
   -h, --help           help for ml
   -i, --interactive    interactive mode
-      --log string     output log
+  -l, --log int        history log size
   -s, --style string   link style [markdown|wiki|html|csv|json] (default "markdown")
   -v, --version        output version of ml
 ```
@@ -50,16 +50,6 @@ $ ml -s html https://git.io/vFR5M
 ```
 
 Support Styles: `markdown`, `wiki`, `html`, `csv`, `json`
-
-### logging
-
-```
-$ ml --log log.txt https://git.io/vFR5M
-[GitHub - spiegel-im-spiegel/ml: Make Link with Markdown Format](https://github.com/spiegel-im-spiegel/ml)
-
-$ cat log.txt
-[GitHub - spiegel-im-spiegel/ml: Make Link with Markdown Format](https://github.com/spiegel-im-spiegel/ml)
-```
 
 ### Interactive Mode
 
