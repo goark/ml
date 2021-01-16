@@ -48,8 +48,8 @@ func newRootCmd(ui *rwi.RWI, args []string) *cobra.Command {
 				return debugPrint(ui, err)
 			}
 
-			//log size
-			log, err := cmd.Flags().GetInt("log")
+			//history log
+			log, err := cmd.Flags().GetInt("log") //log size
 			if err != nil {
 				return debugPrint(ui, err)
 			}
@@ -61,10 +61,14 @@ func newRootCmd(ui *rwi.RWI, args []string) *cobra.Command {
 					_ = ui.OutputErrln(err)
 				}
 			}
+			defer func() {
+				if err := hist.Save(); err != nil {
+					_ = debugPrint(ui, err)
+				}
+			}()
 
 			//set options
 			opts := options.New(style, hist)
-
 			if interactiveFlag {
 				//interactive mode
 				if err := interactive.Do(opts); err != nil {
@@ -74,34 +78,40 @@ func newRootCmd(ui *rwi.RWI, args []string) *cobra.Command {
 				//command line
 				ctx := signal.Context(context.Background(), os.Interrupt)
 				if len(args) > 0 {
+					var lastErr error
 					for _, arg := range args {
-						r, err := opts.MakeLink(ctx, arg)
-						if err != nil {
-							return debugPrint(ui, err)
+						if r, err := opts.MakeLink(ctx, arg); err != nil {
+							_ = ui.OutputErrln(err)
+							lastErr = err
+						} else if err := ui.WriteFrom(r); err != nil {
+							_ = ui.OutputErrln(err)
+							lastErr = err
+						} else {
+							_ = ui.Outputln()
 						}
-						if err := ui.WriteFrom(r); err != nil {
-							return debugPrint(ui, err)
-						}
-						_ = ui.Outputln()
+					}
+					if lastErr != nil {
+						return debugPrint(ui, lastErr)
 					}
 				} else {
+					var lastErr error
 					scanner := bufio.NewScanner(ui.Reader())
 					for scanner.Scan() {
-						r, err := opts.MakeLink(ctx, scanner.Text())
-						if err != nil {
-							return debugPrint(ui, err)
+						if r, err := opts.MakeLink(ctx, scanner.Text()); err != nil {
+							_ = ui.OutputErrln(err)
+							lastErr = err
+						} else if err := ui.WriteFrom(r); err != nil {
+							_ = ui.OutputErrln(err)
+							lastErr = err
+						} else {
+							_ = ui.Outputln()
 						}
-						if err := ui.WriteFrom(r); err != nil {
-							return debugPrint(ui, err)
-						}
-						_ = ui.Outputln()
 					}
-					return scanner.Err()
+					if lastErr != nil {
+						return debugPrint(ui, lastErr)
+					}
+					return debugPrint(ui, scanner.Err())
 				}
-			}
-
-			if err := hist.Save(); err != nil {
-				return debugPrint(ui, err)
 			}
 			return nil
 		},
