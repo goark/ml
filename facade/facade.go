@@ -48,8 +48,8 @@ func newRootCmd(ui *rwi.RWI, args []string) *cobra.Command {
 				return debugPrint(ui, err)
 			}
 
-			//log size
-			log, err := cmd.Flags().GetInt("log")
+			//history log
+			log, err := cmd.Flags().GetInt("log") //log size
 			if err != nil {
 				return debugPrint(ui, err)
 			}
@@ -61,10 +61,14 @@ func newRootCmd(ui *rwi.RWI, args []string) *cobra.Command {
 					_ = ui.OutputErrln(err)
 				}
 			}
+			defer func() {
+				if err := hist.Save(); err != nil {
+					_ = debugPrint(ui, err)
+				}
+			}()
 
 			//set options
 			opts := options.New(style, hist)
-
 			if interactiveFlag {
 				//interactive mode
 				if err := interactive.Do(opts); err != nil {
@@ -96,12 +100,8 @@ func newRootCmd(ui *rwi.RWI, args []string) *cobra.Command {
 						}
 						_ = ui.Outputln()
 					}
-					return scanner.Err()
+					return debugPrint(ui, scanner.Err())
 				}
-			}
-
-			if err := hist.Save(); err != nil {
-				return debugPrint(ui, err)
 			}
 			return nil
 		},
