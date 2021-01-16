@@ -78,27 +78,37 @@ func newRootCmd(ui *rwi.RWI, args []string) *cobra.Command {
 				//command line
 				ctx := signal.Context(context.Background(), os.Interrupt)
 				if len(args) > 0 {
+					var lastErr error
 					for _, arg := range args {
-						r, err := opts.MakeLink(ctx, arg)
-						if err != nil {
-							return debugPrint(ui, err)
+						if r, err := opts.MakeLink(ctx, arg); err != nil {
+							_ = ui.OutputErrln(err)
+							lastErr = err
+						} else if err := ui.WriteFrom(r); err != nil {
+							_ = ui.OutputErrln(err)
+							lastErr = err
+						} else {
+							_ = ui.Outputln()
 						}
-						if err := ui.WriteFrom(r); err != nil {
-							return debugPrint(ui, err)
-						}
-						_ = ui.Outputln()
+					}
+					if lastErr != nil {
+						return debugPrint(ui, lastErr)
 					}
 				} else {
+					var lastErr error
 					scanner := bufio.NewScanner(ui.Reader())
 					for scanner.Scan() {
-						r, err := opts.MakeLink(ctx, scanner.Text())
-						if err != nil {
-							return debugPrint(ui, err)
+						if r, err := opts.MakeLink(ctx, scanner.Text()); err != nil {
+							_ = ui.OutputErrln(err)
+							lastErr = err
+						} else if err := ui.WriteFrom(r); err != nil {
+							_ = ui.OutputErrln(err)
+							lastErr = err
+						} else {
+							_ = ui.Outputln()
 						}
-						if err := ui.WriteFrom(r); err != nil {
-							return debugPrint(ui, err)
-						}
-						_ = ui.Outputln()
+					}
+					if lastErr != nil {
+						return debugPrint(ui, lastErr)
 					}
 					return debugPrint(ui, scanner.Err())
 				}
