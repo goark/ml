@@ -6,6 +6,8 @@
 [![GitHub license](https://img.shields.io/badge/license-Apache%202-blue.svg)](https://raw.githubusercontent.com/spiegel-im-spiegel/ml/master/LICENSE)
 [![GitHub release](http://img.shields.io/github/release/spiegel-im-spiegel/ml.svg)](https://github.com/spiegel-im-spiegel/ml/releases/latest)
 
+This package is required Go 1.16 or later.
+
 ## Build and Install
 
 ```

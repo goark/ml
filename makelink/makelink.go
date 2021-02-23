@@ -7,7 +7,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"strings"
 
@@ -100,7 +99,7 @@ func (lnk *Link) TitleName() string {
 //Encode returns string (io.Reader) with other style
 func (lnk *Link) Encode(t Style) io.Reader {
 	if lnk == nil {
-		return ioutil.NopCloser(bytes.NewReader(nil))
+		return io.NopCloser(bytes.NewReader(nil))
 	}
 	buf := &bytes.Buffer{}
 	switch t {
