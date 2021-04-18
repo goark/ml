@@ -1,0 +1,33 @@
+version: '3'
+
+tasks:
+  default:
+    cmds:
+      - task: clean
+      - task: test
+      - task: graph
+
+  build-all:
+    cmds:
+      - goreleaser --snapshot --skip-publish --rm-dist
+
+  test:
+    desc: Update modules, check vulns, test, and lint.
+    cmds:
+      - go mod verify
+      - go mod tidy -v
+      - depm list -j | docker run --rm -i sonatypecommunity/nancy:latest sleuth -n
+      - go test ./...
+      - docker run --rm -v $(pwd):/app -w /app golangci/golangci-lint:v1.39.0 golangci-lint run --enable gosec --timeout 3m0s ./...
+
+  clean:
+    desc: Clean module and build cache, and remove go.sum file.
+    cmds:
+      - rm -f ./go.sum
+      - go clean -cache
+      - go clean -modcache
+
+  graph:
+    desc: Make grapth of dependency modules.
+    cmds:
+      - depm m --dot --dot-config dot-config.toml | dot -Tpng -o dependency.png

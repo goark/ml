@@ -16,3 +16,4 @@
 # Other folders and files
 vendor/
 dist/
+.task/
