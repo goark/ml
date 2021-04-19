@@ -5,30 +5,38 @@ tasks:
     cmds:
       - task: clean
       - task: test
+      - task: nancy
       - task: graph
 
   build-all:
+    desc: Build executable binary with GoReleaser.
     cmds:
       - goreleaser --snapshot --skip-publish --rm-dist
 
   test:
-    desc: Update modules, check vulns, test, and lint.
+    desc: Test and lint.
     cmds:
       - go mod verify
-      - depm list -j | docker run --rm -i sonatypecommunity/nancy:latest sleuth -n
       - go test ./...
       - docker run --rm -v $(pwd):/app -w /app golangci/golangci-lint:v1.39.0 golangci-lint run --enable gosec --timeout 3m0s ./...
     sources:
       - ./go.mod
       - '**/*.go'
 
+  nancy:
+    desc: Check vulnerability of external packages with Nancy.
+    cmds:
+      - depm list -j | docker run --rm -i sonatypecommunity/nancy:latest sleuth -n
+    sources:
+      - ./go.mod
+      - '**/*.go'
+
   clean:
-    desc: Clean module and build cache, and remove go.sum file.
+    desc: Initialize module and build cache, and remake go.sum file.
     cmds:
       - rm -f ./go.sum
       - go clean -cache
       - go clean -modcache
-      - go mod verify
       - go mod tidy -v
 
   graph:
