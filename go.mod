@@ -10,6 +10,6 @@ require (
 	github.com/spiegel-im-spiegel/errs v1.0.2
 	github.com/spiegel-im-spiegel/fetch v0.2.3
 	github.com/spiegel-im-spiegel/gocli v0.10.4
-	github.com/zetamatta/go-readline-ny v0.4.11
-	golang.org/x/net v0.0.0-20210415231046-e915ea6b2b7d
+	github.com/zetamatta/go-readline-ny v0.4.12
+	golang.org/x/net v0.0.0-20210503060351-7fd8e65b6420
 )
