@@ -11,5 +11,5 @@ require (
 	github.com/spiegel-im-spiegel/fetch v0.2.3
 	github.com/spiegel-im-spiegel/gocli v0.10.4
 	github.com/zetamatta/go-readline-ny v0.4.12
-	golang.org/x/net v0.0.0-20210503060351-7fd8e65b6420
+	golang.org/x/net v0.0.0-20210521195947-fe42d452be8f
 )
