@@ -13,7 +13,7 @@ var typesTests2 = []typesTestCase{
 	{"[GitHub - spiegel-im-spiegel/ml: Make Link with Markdown Format](https://github.com/spiegel-im-spiegel/ml)", StyleMarkdown},
 	{"[https://github.com/spiegel-im-spiegel/ml GitHub - spiegel-im-spiegel/ml: Make Link with Markdown Format]", StyleWiki},
 	{"<a href=\"https://github.com/spiegel-im-spiegel/ml\">GitHub - spiegel-im-spiegel/ml: Make Link with Markdown Format</a>", StyleHTML},
-	{"\"https://git.io/vFR5M\",\"https://github.com/spiegel-im-spiegel/ml\",\"GitHub - spiegel-im-spiegel/ml: Make Link with Markdown Format\",\"ml - Make Link with Markdown Format\"", StyleCSV},
+	{"\"https://git.io/vFR5M\",\"https://github.com/spiegel-im-spiegel/ml\",\"\",\"GitHub - spiegel-im-spiegel/ml: Make Link with Markdown Format\",\"ml - Make Link with Markdown Format\"", StyleCSV},
 	{"", StyleUnknown},
 }
 
@@ -36,12 +36,12 @@ var typesTests3 = []typesTestCase{
 	{"[https://git.io/vFR5M](https://github.com/spiegel-im-spiegel/ml)", StyleMarkdown},
 	{"[https://github.com/spiegel-im-spiegel/ml https://git.io/vFR5M]", StyleWiki},
 	{"<a href=\"https://github.com/spiegel-im-spiegel/ml\">https://git.io/vFR5M</a>", StyleHTML},
-	{"\"https://git.io/vFR5M\",\"https://github.com/spiegel-im-spiegel/ml\",\"\",\"\"", StyleCSV},
+	{"\"https://git.io/vFR5M\",\"https://github.com/spiegel-im-spiegel/ml\",\"https://github.com/spiegel-im-spiegel/ml\",\"\",\"\"", StyleCSV},
 	{"", StyleUnknown},
 }
 
 func TestEncodeNoUTF8(t *testing.T) {
-	lnk := &Link{URL: "https://git.io/vFR5M", Location: "https://github.com/spiegel-im-spiegel/ml", Title: "", Description: ""}
+	lnk := &Link{URL: "https://git.io/vFR5M", Location: "https://github.com/spiegel-im-spiegel/ml", Canonical: "https://github.com/spiegel-im-spiegel/ml", Title: "", Description: ""}
 	for _, tst := range typesTests3 {
 		r := lnk.Encode(tst.t)
 		buf := new(bytes.Buffer)

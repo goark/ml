@@ -21,6 +21,7 @@ import (
 type Link struct {
 	URL         string `json:"url,omitempty"`
 	Location    string `json:"location,omitempty"`
+	Canonical   string `json:"canonical,omitempty"`
 	Title       string `json:"title,omitempty"`
 	Description string `json:"description,omitempty"`
 }
@@ -71,6 +72,13 @@ func New(ctx context.Context, urlStr string) (*Link, error) {
 				}
 			}
 		})
+		s.Find("link[rel='canonical']").Each(func(_ int, s *goquery.Selection) {
+			if v, ok := s.Attr("href"); ok {
+				if len(v) > 0 {
+					link.Canonical = trimString(v)
+				}
+			}
+		})
 	})
 	return link, nil
 }
@@ -96,6 +104,20 @@ func (lnk *Link) TitleName() string {
 	return lnk.URL
 }
 
+//CanonicalURL returns the canonical URL.
+func (lnk *Link) CanonicalURL() string {
+	if lnk == nil {
+		return ""
+	}
+	if len(lnk.Canonical) > 0 {
+		return lnk.Canonical
+	}
+	if len(lnk.Location) > 0 {
+		return lnk.Location
+	}
+	return lnk.URL
+}
+
 //Encode returns string (io.Reader) with other style
 func (lnk *Link) Encode(t Style) io.Reader {
 	if lnk == nil {
@@ -104,13 +126,13 @@ func (lnk *Link) Encode(t Style) io.Reader {
 	buf := &bytes.Buffer{}
 	switch t {
 	case StyleMarkdown:
-		fmt.Fprintf(buf, "[%s](%s)", lnk.TitleName(), lnk.Location)
+		fmt.Fprintf(buf, "[%s](%s)", lnk.TitleName(), lnk.CanonicalURL())
 	case StyleWiki:
-		fmt.Fprintf(buf, "[%s %s]", lnk.Location, lnk.TitleName())
+		fmt.Fprintf(buf, "[%s %s]", lnk.CanonicalURL(), lnk.TitleName())
 	case StyleHTML:
-		fmt.Fprintf(buf, "<a href=\"%s\">%s</a>", lnk.Location, lnk.TitleName())
+		fmt.Fprintf(buf, "<a href=\"%s\">%s</a>", lnk.CanonicalURL(), lnk.TitleName())
 	case StyleCSV:
-		fmt.Fprintf(buf, "\"%s\",\"%s\",\"%s\",\"%s\"", escapeQuoteCsv(lnk.URL), escapeQuoteCsv(lnk.Location), escapeQuoteCsv(lnk.Title), escapeQuoteCsv(lnk.Description))
+		fmt.Fprintf(buf, "\"%s\",\"%s\",\"%s\",\"%s\",\"%s\"", escapeQuoteCsv(lnk.URL), escapeQuoteCsv(lnk.Location), escapeQuoteCsv(lnk.Canonical), escapeQuoteCsv(lnk.Title), escapeQuoteCsv(lnk.Description))
 	case StyleJSON:
 		_ = json.NewEncoder(buf).Encode(lnk)
 	}

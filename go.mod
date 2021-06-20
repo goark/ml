@@ -3,7 +3,7 @@ module github.com/spiegel-im-spiegel/ml
 go 1.16
 
 require (
-	github.com/PuerkitoBio/goquery v1.6.1
+	github.com/PuerkitoBio/goquery v1.7.0
 	github.com/atotto/clipboard v0.1.4
 	github.com/mattn/go-encoding v0.0.2
 	github.com/spf13/cobra v1.1.3
@@ -11,5 +11,5 @@ require (
 	github.com/spiegel-im-spiegel/fetch v0.2.3
 	github.com/spiegel-im-spiegel/gocli v0.10.4
 	github.com/zetamatta/go-readline-ny v0.4.12
-	golang.org/x/net v0.0.0-20210521195947-fe42d452be8f
+	golang.org/x/net v0.0.0-20210614182718-04defd469f4e
 )
