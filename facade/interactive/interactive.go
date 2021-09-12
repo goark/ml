@@ -8,10 +8,10 @@ import (
 	"os"
 
 	"github.com/atotto/clipboard"
+	"github.com/nyaosorg/go-readline-ny"
 	"github.com/spiegel-im-spiegel/errs"
 	"github.com/spiegel-im-spiegel/gocli/signal"
 	"github.com/spiegel-im-spiegel/ml/facade/options"
-	"github.com/zetamatta/go-readline-ny"
 )
 
 func Do(opts *options.Options) error {

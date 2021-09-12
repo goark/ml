@@ -3,8 +3,8 @@ package history
 import (
 	"os"
 
+	"github.com/nyaosorg/go-readline-ny"
 	"github.com/spiegel-im-spiegel/errs"
-	"github.com/zetamatta/go-readline-ny"
 )
 
 //HistoryFile is a history file class.
