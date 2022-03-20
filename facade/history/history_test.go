@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/spiegel-im-spiegel/ml/facade/history"
+	"github.com/goark/ml/facade/history"
 )
 
 func TestHistory(t *testing.T) {

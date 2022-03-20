@@ -3,8 +3,8 @@ package makelink
 import (
 	"strings"
 
-	"github.com/spiegel-im-spiegel/errs"
-	"github.com/spiegel-im-spiegel/ml/ecode"
+	"github.com/goark/errs"
+	"github.com/goark/ml/ecode"
 )
 
 //Style as link style

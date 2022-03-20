@@ -1,3 +1,4 @@
+//go:build run
 // +build run
 
 package main
@@ -8,7 +9,7 @@ import (
 	"io"
 	"os"
 
-	"github.com/spiegel-im-spiegel/ml/makelink"
+	"github.com/goark/ml/makelink"
 )
 
 func main() {
@@ -19,5 +20,5 @@ func main() {
 	}
 	_, _ = io.Copy(os.Stdout, lnk.Encode(makelink.StyleMarkdown))
 	// Output:
-	// [GitHub - spiegel-im-spiegel/ml: Make Link with Markdown Format](https://github.com/spiegel-im-spiegel/ml)
+	// [GitHub - goark/ml: Make Link with Markdown Format](https://github.com/goark/ml)
 }

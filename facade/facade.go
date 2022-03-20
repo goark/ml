@@ -6,14 +6,14 @@ import (
 	"os"
 	"runtime"
 
+	"github.com/goark/gocli/exitcode"
+	"github.com/goark/gocli/rwi"
+	"github.com/goark/gocli/signal"
+	"github.com/goark/ml/facade/history"
+	"github.com/goark/ml/facade/interactive"
+	"github.com/goark/ml/facade/options"
+	"github.com/goark/ml/makelink"
 	"github.com/spf13/cobra"
-	"github.com/spiegel-im-spiegel/gocli/exitcode"
-	"github.com/spiegel-im-spiegel/gocli/rwi"
-	"github.com/spiegel-im-spiegel/gocli/signal"
-	"github.com/spiegel-im-spiegel/ml/facade/history"
-	"github.com/spiegel-im-spiegel/ml/facade/interactive"
-	"github.com/spiegel-im-spiegel/ml/facade/options"
-	"github.com/spiegel-im-spiegel/ml/makelink"
 )
 
 var (
