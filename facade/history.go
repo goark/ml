@@ -3,7 +3,7 @@ package facade
 import (
 	"os"
 
-	"github.com/spiegel-im-spiegel/gocli/config"
+	"github.com/goark/gocli/config"
 )
 
 const logFile = "history"

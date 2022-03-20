@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/spiegel-im-spiegel/ml/ecode"
+	"github.com/goark/ml/ecode"
 )
 
 type typesTestCase struct {

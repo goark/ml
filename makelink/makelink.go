@@ -11,9 +11,9 @@ import (
 	"strings"
 
 	"github.com/PuerkitoBio/goquery"
+	"github.com/goark/errs"
+	"github.com/goark/fetch"
 	encoding "github.com/mattn/go-encoding"
-	"github.com/spiegel-im-spiegel/errs"
-	"github.com/spiegel-im-spiegel/fetch"
 	"golang.org/x/net/html/charset"
 )
 

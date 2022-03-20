@@ -10,15 +10,15 @@ import (
 )
 
 var typesTests2 = []typesTestCase{
-	{"[GitHub - spiegel-im-spiegel/ml: Make Link with Markdown Format](https://github.com/spiegel-im-spiegel/ml)", StyleMarkdown},
-	{"[https://github.com/spiegel-im-spiegel/ml GitHub - spiegel-im-spiegel/ml: Make Link with Markdown Format]", StyleWiki},
-	{"<a href=\"https://github.com/spiegel-im-spiegel/ml\">GitHub - spiegel-im-spiegel/ml: Make Link with Markdown Format</a>", StyleHTML},
-	{"\"https://git.io/vFR5M\",\"https://github.com/spiegel-im-spiegel/ml\",\"\",\"GitHub - spiegel-im-spiegel/ml: Make Link with Markdown Format\",\"ml - Make Link with Markdown Format\"", StyleCSV},
+	{"[GitHub - goark/ml: Make Link with Markdown Format](https://github.com/goark/ml)", StyleMarkdown},
+	{"[https://github.com/goark/ml GitHub - goark/ml: Make Link with Markdown Format]", StyleWiki},
+	{"<a href=\"https://github.com/goark/ml\">GitHub - goark/ml: Make Link with Markdown Format</a>", StyleHTML},
+	{"\"https://git.io/vFR5M\",\"https://github.com/goark/ml\",\"\",\"GitHub - goark/ml: Make Link with Markdown Format\",\"ml - Make Link with Markdown Format\"", StyleCSV},
 	{"", StyleUnknown},
 }
 
 func TestEncode(t *testing.T) {
-	lnk := &Link{URL: "https://git.io/vFR5M", Location: "https://github.com/spiegel-im-spiegel/ml", Title: "GitHub - spiegel-im-spiegel/ml: Make Link with Markdown Format", Description: "ml - Make Link with Markdown Format"}
+	lnk := &Link{URL: "https://git.io/vFR5M", Location: "https://github.com/goark/ml", Title: "GitHub - goark/ml: Make Link with Markdown Format", Description: "ml - Make Link with Markdown Format"}
 	for _, tst := range typesTests2 {
 		r := lnk.Encode(tst.t)
 		buf := new(bytes.Buffer)
@@ -33,15 +33,15 @@ func TestEncode(t *testing.T) {
 }
 
 var typesTests3 = []typesTestCase{
-	{"[https://git.io/vFR5M](https://github.com/spiegel-im-spiegel/ml)", StyleMarkdown},
-	{"[https://github.com/spiegel-im-spiegel/ml https://git.io/vFR5M]", StyleWiki},
-	{"<a href=\"https://github.com/spiegel-im-spiegel/ml\">https://git.io/vFR5M</a>", StyleHTML},
-	{"\"https://git.io/vFR5M\",\"https://github.com/spiegel-im-spiegel/ml\",\"https://github.com/spiegel-im-spiegel/ml\",\"\",\"\"", StyleCSV},
+	{"[https://git.io/vFR5M](https://github.com/goark/ml)", StyleMarkdown},
+	{"[https://github.com/goark/ml https://git.io/vFR5M]", StyleWiki},
+	{"<a href=\"https://github.com/goark/ml\">https://git.io/vFR5M</a>", StyleHTML},
+	{"\"https://git.io/vFR5M\",\"https://github.com/goark/ml\",\"https://github.com/goark/ml\",\"\",\"\"", StyleCSV},
 	{"", StyleUnknown},
 }
 
 func TestEncodeNoUTF8(t *testing.T) {
-	lnk := &Link{URL: "https://git.io/vFR5M", Location: "https://github.com/spiegel-im-spiegel/ml", Canonical: "https://github.com/spiegel-im-spiegel/ml", Title: "", Description: ""}
+	lnk := &Link{URL: "https://git.io/vFR5M", Location: "https://github.com/goark/ml", Canonical: "https://github.com/goark/ml", Title: "", Description: ""}
 	for _, tst := range typesTests3 {
 		r := lnk.Encode(tst.t)
 		buf := new(bytes.Buffer)
@@ -56,9 +56,9 @@ func TestEncodeNoUTF8(t *testing.T) {
 }
 
 func TestString(t *testing.T) {
-	lnk := &Link{URL: "https://git.io/vFR5M", Location: "https://github.com/spiegel-im-spiegel/ml", Title: "GitHub - spiegel-im-spiegel/ml: Make Link with Markdown Format", Description: "ml - Make Link with Markdown Format"}
+	lnk := &Link{URL: "https://git.io/vFR5M", Location: "https://github.com/goark/ml", Title: "GitHub - goark/ml: Make Link with Markdown Format", Description: "ml - Make Link with Markdown Format"}
 	str := lnk.String()
-	res := `{"url":"https://git.io/vFR5M","location":"https://github.com/spiegel-im-spiegel/ml","title":"GitHub - spiegel-im-spiegel/ml: Make Link with Markdown Format","description":"ml - Make Link with Markdown Format"}
+	res := `{"url":"https://git.io/vFR5M","location":"https://github.com/goark/ml","title":"GitHub - goark/ml: Make Link with Markdown Format","description":"ml - Make Link with Markdown Format"}
 `
 	if str != res {
 		t.Errorf("New()  = \"%v\", want \"%v\".", str, res)
@@ -82,7 +82,7 @@ func ExampleNew() {
 	}
 	fmt.Println(link.Encode(StyleMarkdown))
 	// Output:
-	// [GitHub - spiegel-im-spiegel/ml: Make Link with Markdown Format](https://github.com/spiegel-im-spiegel/ml)
+	// [GitHub - goark/ml: Make Link with Markdown Format](https://github.com/goark/ml)
 }
 
 /* Copyright 2017-2021 Spiegel

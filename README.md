@@ -1,22 +1,24 @@
 # [ml] -- Make Link with Markdown Format
 
-[![check vulns](https://github.com/spiegel-im-spiegel/ml/workflows/vulns/badge.svg)](https://github.com/spiegel-im-spiegel/ml/actions)
-[![lint status](https://github.com/spiegel-im-spiegel/ml/workflows/lint/badge.svg)](https://github.com/spiegel-im-spiegel/ml/actions)
-[![lint status](https://github.com/spiegel-im-spiegel/ml/workflows/build/badge.svg)](https://github.com/spiegel-im-spiegel/ml/actions)
-[![GitHub license](https://img.shields.io/badge/license-Apache%202-blue.svg)](https://raw.githubusercontent.com/spiegel-im-spiegel/ml/master/LICENSE)
-[![GitHub release](http://img.shields.io/github/release/spiegel-im-spiegel/ml.svg)](https://github.com/spiegel-im-spiegel/ml/releases/latest)
+[![check vulns](https://github.com/goark/ml/workflows/vulns/badge.svg)](https://github.com/goark/ml/actions)
+[![lint status](https://github.com/goark/ml/workflows/lint/badge.svg)](https://github.com/goark/ml/actions)
+[![lint status](https://github.com/goark/ml/workflows/build/badge.svg)](https://github.com/goark/ml/actions)
+[![GitHub license](https://img.shields.io/badge/license-Apache%202-blue.svg)](https://raw.githubusercontent.com/goark/ml/master/LICENSE)
+[![GitHub release](http://img.shields.io/github/release/goark/ml.svg)](https://github.com/goark/ml/releases/latest)
 
-This package is required Go 1.16 or later.
+This package is required Go 1.18 or later.
+
+**Migrated repository to [github.com/goark/ml][ml]**
 
 ## Build and Install
 
 ```
-$ go install github.com/spiegel-im-spiegel/gpgpdump@latest
+$ go install github.com/goark/ml@latest
 ```
 
 ## Binaries
 
-See [latest release](https://github.com/spiegel-im-spiegel/ml/releases/latest).
+See [latest release](https://github.com/goark/ml/releases/latest).
 
 ## Usage
 
@@ -36,19 +38,19 @@ Flags:
 
 ```
 $ ml https://git.io/vFR5M
-[GitHub - spiegel-im-spiegel/ml: Make Link with Markdown Format](https://github.com/spiegel-im-spiegel/ml)
+[GitHub - goark/ml: Make Link with Markdown Format](https://github.com/goark/ml)
 ```
 
 ```
 $ echo https://git.io/vFR5M | ml
-[GitHub - spiegel-im-spiegel/ml: Make Link with Markdown Format](https://github.com/spiegel-im-spiegel/ml)
+[GitHub - goark/ml: Make Link with Markdown Format](https://github.com/goark/ml)
 ```
 
 ### Support Other Styles
 
 ```
 $ ml -s html https://git.io/vFR5M
-<a href="https://github.com/spiegel-im-spiegel/ml">GitHub - spiegel-im-spiegel/ml: Make Link with Markdown Format</a>
+<a href="https://github.com/goark/ml">GitHub - goark/ml: Make Link with Markdown Format</a>
 ```
 
 Support Styles: `markdown`, `wiki`, `html`, `csv`, `json`
@@ -59,7 +61,7 @@ Support Styles: `markdown`, `wiki`, `html`, `csv`, `json`
 $ ml -i
 Input 'q' or 'quit' to stop
 ml> https://git.io/vFR5M
-[GitHub - spiegel-im-spiegel/ml: Make Link with Markdown Format](https://github.com/spiegel-im-spiegel/ml)
+[GitHub - goark/ml: Make Link with Markdown Format](https://github.com/goark/ml)
 ml>
 ```
 
@@ -74,7 +76,7 @@ import (
     "io"
     "os"
 
-    "github.com/spiegel-im-spiegel/ml/makelink"
+    "github.com/goark/ml/makelink"
 )
 
 func main() {
@@ -85,7 +87,7 @@ func main() {
     }
     _, _ = io.Copy(os.Stdout, lnk.Encode(makelink.StyleMarkdown))
     // Output:
-    // [GitHub - spiegel-im-spiegel/ml: Make Link with Markdown Format](https://github.com/spiegel-im-spiegel/ml)
+    // [GitHub - goark/ml: Make Link with Markdown Format](https://github.com/goark/ml)
 }
 ```
 
@@ -93,4 +95,4 @@ func main() {
 
 [![dependency.png](./dependency.png)](./dependency.png)
 
-[ml]: https://github.com/spiegel-im-spiegel/ml "spiegel-im-spiegel/ml: Make Link with Markdown Format"
+[ml]: https://github.com/goark/ml "goark/ml: Make Link with Markdown Format"

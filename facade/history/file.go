@@ -3,8 +3,8 @@ package history
 import (
 	"os"
 
+	"github.com/goark/errs"
 	"github.com/nyaosorg/go-readline-ny"
-	"github.com/spiegel-im-spiegel/errs"
 )
 
 //HistoryFile is a history file class.

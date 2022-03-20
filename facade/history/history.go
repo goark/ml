@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"io"
 
+	"github.com/goark/errs"
 	"github.com/nyaosorg/go-readline-ny"
-	"github.com/spiegel-im-spiegel/errs"
 )
 
 //History is a ring-buffer class for history (string) data.

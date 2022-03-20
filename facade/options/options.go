@@ -4,10 +4,10 @@ import (
 	"context"
 	"io"
 
-	"github.com/spiegel-im-spiegel/errs"
-	"github.com/spiegel-im-spiegel/ml/ecode"
-	"github.com/spiegel-im-spiegel/ml/facade/history"
-	"github.com/spiegel-im-spiegel/ml/makelink"
+	"github.com/goark/errs"
+	"github.com/goark/ml/ecode"
+	"github.com/goark/ml/facade/history"
+	"github.com/goark/ml/makelink"
 )
 
 //Options class is Options for making link

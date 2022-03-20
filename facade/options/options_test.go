@@ -8,9 +8,9 @@ import (
 	"os"
 	"testing"
 
-	"github.com/spiegel-im-spiegel/ml/facade/history"
-	"github.com/spiegel-im-spiegel/ml/facade/options"
-	"github.com/spiegel-im-spiegel/ml/makelink"
+	"github.com/goark/ml/facade/history"
+	"github.com/goark/ml/facade/options"
+	"github.com/goark/ml/makelink"
 )
 
 func TestMakeLink(t *testing.T) {
@@ -25,7 +25,7 @@ func TestMakeLink(t *testing.T) {
 		t.Errorf("Error in io.Copy(): %+v", err)
 	}
 
-	res := "[GitHub - spiegel-im-spiegel/ml: Make Link with Markdown Format](https://github.com/spiegel-im-spiegel/ml)"
+	res := "[GitHub - goark/ml: Make Link with Markdown Format](https://github.com/goark/ml)"
 	str := outBuf.String()
 	if str != res {
 		t.Errorf("Context.MakeLink() = \"%v\", want \"%v\".", str, res)
@@ -46,7 +46,7 @@ func TestMakeLinkNil(t *testing.T) {
 		t.Errorf("Error in io.Copy(): %+v", err)
 	}
 
-	res := "[GitHub - spiegel-im-spiegel/ml: Make Link with Markdown Format](https://github.com/spiegel-im-spiegel/ml)"
+	res := "[GitHub - goark/ml: Make Link with Markdown Format](https://github.com/goark/ml)"
 	str := outBuf.String()
 	if str != res {
 		t.Errorf("Context.MakeLink()  = \"%v\", want \"%v\".", str, res)
