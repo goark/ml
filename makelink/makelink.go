@@ -27,13 +27,20 @@ type Link struct {
 }
 
 //New returns new Link instance
-func New(ctx context.Context, urlStr string) (*Link, error) {
+func New(ctx context.Context, urlStr, userAgent string) (*Link, error) {
 	link := &Link{URL: urlStr}
 	u, err := fetch.URL(urlStr)
 	if err != nil {
 		return link, errs.Wrap(err, errs.WithContext("url", urlStr))
 	}
-	resp, err := fetch.New(fetch.WithHTTPClient(&http.Client{})).Get(u, fetch.WithContext(ctx))
+	if len(userAgent) == 0 {
+		userAgent = "goark/ml (+https://github.com/goark/ml)" //dummy user-agent string
+	}
+	resp, err := fetch.New(fetch.WithHTTPClient(&http.Client{})).Get(
+		u,
+		fetch.WithContext(ctx),
+		fetch.WithRequestHeaderSet("User-Agent", userAgent),
+	)
 	if err != nil {
 		return link, errs.Wrap(err, errs.WithContext("url", urlStr))
 	}

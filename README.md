@@ -6,7 +6,7 @@
 [![GitHub license](https://img.shields.io/badge/license-Apache%202-blue.svg)](https://raw.githubusercontent.com/goark/ml/master/LICENSE)
 [![GitHub release](http://img.shields.io/github/release/goark/ml.svg)](https://github.com/goark/ml/releases/latest)
 
-This package is required Go 1.18 or later.
+This package is required Go 1.16 or later.
 
 **Migrated repository to [github.com/goark/ml][ml]**
 
@@ -28,12 +28,13 @@ Usage:
   ml [flags] [URL [URL]...]
 
 Flags:
-      --debug          for debug
-  -h, --help           help for ml
-  -i, --interactive    interactive mode
-  -l, --log int        history log size
-  -s, --style string   link style [markdown|wiki|html|csv|json] (default "markdown")
-  -v, --version        output version of ml
+      --debug               for debug
+  -h, --help                help for ml
+  -i, --interactive         interactive mode
+  -l, --log int             history log size
+  -s, --style string        link style [markdown|wiki|html|csv|json] (default "markdown")
+  -a, --user-agent string   User-Agent string
+  -v, --version             output version of ml
 ```
 
 ```
@@ -80,7 +81,7 @@ import (
 )
 
 func main() {
-    lnk, err := makelink.New(context.Background(), "https://git.io/vFR5M")
+    lnk, err := makelink.New(context.Background(), "https://git.io/vFR5M", "")
     if err != nil {
         fmt.Fprintln(os.Stderr, err)
         return

@@ -14,14 +14,15 @@ import (
 type Options struct {
 	linkStyle makelink.Style
 	hist      *history.HistoryFile
+	userAgent string
 }
 
 //New returns new Options instance
-func New(s makelink.Style, hist *history.HistoryFile) *Options {
+func New(s makelink.Style, hist *history.HistoryFile, userAgent string) *Options {
 	if hist == nil {
 		hist = history.NewFile(0, "")
 	}
-	return &Options{linkStyle: s, hist: hist}
+	return &Options{linkStyle: s, hist: hist, userAgent: userAgent}
 }
 
 //History method returns history.HistoryFile instance.
@@ -33,7 +34,7 @@ func (c *Options) MakeLink(ctx context.Context, urlStr string) (io.Reader, error
 		return nil, errs.Wrap(ecode.ErrNullPointer)
 	}
 	c.History().Add(urlStr)
-	lnk, err := makelink.New(ctx, urlStr)
+	lnk, err := makelink.New(ctx, urlStr, c.userAgent)
 	if err != nil {
 		return nil, errs.Wrap(err)
 	}

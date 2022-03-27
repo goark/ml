@@ -66,7 +66,7 @@ func TestString(t *testing.T) {
 }
 
 func TestNewErr(t *testing.T) {
-	_, err := New(context.Background(), "https://foo.bar")
+	_, err := New(context.Background(), "https://foo.bar", "")
 	if err == nil {
 		t.Error("New()  = nil error, not want nil error.")
 	} else {
@@ -75,7 +75,7 @@ func TestNewErr(t *testing.T) {
 }
 
 func ExampleNew() {
-	link, err := New(context.Background(), "https://git.io/vFR5M")
+	link, err := New(context.Background(), "https://git.io/vFR5M", "")
 	if err != nil {
 		fmt.Println(err)
 		return
