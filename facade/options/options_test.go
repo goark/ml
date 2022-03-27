@@ -15,7 +15,7 @@ import (
 
 func TestMakeLink(t *testing.T) {
 	urlStr := "https://git.io/vFR5M"
-	opt := options.New(makelink.StyleMarkdown, history.NewFile(1, ""))
+	opt := options.New(makelink.StyleMarkdown, history.NewFile(1, ""), "")
 	rRes, err := opt.MakeLink(context.Background(), urlStr)
 	if err != nil {
 		t.Errorf("Error in Context.MakeLink(): %+v", err)
@@ -37,7 +37,7 @@ func TestMakeLink(t *testing.T) {
 }
 
 func TestMakeLinkNil(t *testing.T) {
-	rRes, err := options.New(makelink.StyleMarkdown, nil).MakeLink(context.Background(), "https://git.io/vFR5M")
+	rRes, err := options.New(makelink.StyleMarkdown, nil, "").MakeLink(context.Background(), "https://git.io/vFR5M")
 	if err != nil {
 		t.Errorf("Error in Context.MakeLink(): %+v", err)
 	}
@@ -54,7 +54,7 @@ func TestMakeLinkNil(t *testing.T) {
 }
 
 func TestMakeLinkErr(t *testing.T) {
-	_, err := options.New(makelink.StyleMarkdown, nil).MakeLink(context.Background(), "https://foo.bar")
+	_, err := options.New(makelink.StyleMarkdown, nil, "").MakeLink(context.Background(), "https://foo.bar")
 	if err == nil {
 		t.Error("Context.MakeLink() = nil error, not want nil error.")
 	} else {

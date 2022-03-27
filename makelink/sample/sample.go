@@ -13,7 +13,7 @@ import (
 )
 
 func main() {
-	lnk, err := makelink.New(context.Background(), "https://git.io/vFR5M")
+	lnk, err := makelink.New(context.Background(), "https://git.io/vFR5M", "")
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		return

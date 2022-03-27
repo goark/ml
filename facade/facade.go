@@ -47,6 +47,10 @@ func newRootCmd(ui *rwi.RWI, args []string) *cobra.Command {
 			if err != nil {
 				return debugPrint(ui, err)
 			}
+			userAgent, err := cmd.Flags().GetString("user-agent")
+			if err != nil {
+				return debugPrint(ui, err)
+			}
 
 			//history log
 			log, err := cmd.Flags().GetInt("log") //log size
@@ -68,7 +72,7 @@ func newRootCmd(ui *rwi.RWI, args []string) *cobra.Command {
 			}()
 
 			//set options
-			opts := options.New(style, hist)
+			opts := options.New(style, hist, userAgent)
 			if interactiveFlag {
 				//interactive mode
 				if err := interactive.Do(opts); err != nil {
@@ -126,6 +130,7 @@ func newRootCmd(ui *rwi.RWI, args []string) *cobra.Command {
 	rootCmd.Flags().BoolVarP(&interactiveFlag, "interactive", "i", false, "interactive mode")
 	rootCmd.Flags().BoolVarP(&debugFlag, "debug", "", false, "for debug")
 	rootCmd.Flags().StringP("style", "s", makelink.StyleMarkdown.String(), "link style ["+makelink.StyleList()+"]")
+	rootCmd.Flags().StringP("user-agent", "a", "", "User-Agent string")
 	rootCmd.Flags().IntP("log", "l", 0, "history log size")
 
 	return rootCmd
