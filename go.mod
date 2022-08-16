@@ -1,6 +1,6 @@
 module github.com/goark/ml
 
-go 1.18
+go 1.19
 
 require (
 	github.com/PuerkitoBio/goquery v1.8.0
@@ -9,9 +9,9 @@ require (
 	github.com/goark/fetch v0.3.0
 	github.com/goark/gocli v0.12.0
 	github.com/mattn/go-encoding v0.0.2
-	github.com/nyaosorg/go-readline-ny v0.7.0
-	github.com/spf13/cobra v1.4.0
-	golang.org/x/net v0.0.0-20220325170049-de3da57026de
+	github.com/nyaosorg/go-readline-ny v0.8.2
+	github.com/spf13/cobra v1.5.0
+	golang.org/x/net v0.0.0-20220812174116-3211cb980234
 )
 
 require (
@@ -22,6 +22,6 @@ require (
 	github.com/mattn/go-runewidth v0.0.13 // indirect
 	github.com/rivo/uniseg v0.2.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
-	golang.org/x/sys v0.0.0-20211216021012-1d35b9e2eb4e // indirect
+	golang.org/x/sys v0.0.0-20220728004956-3c1f35247d10 // indirect
 	golang.org/x/text v0.3.7 // indirect
 )
