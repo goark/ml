@@ -31,11 +31,10 @@ func Do(opts *options.Options) error {
 		}
 		r, err := opts.MakeLink(ctx, text)
 		if err != nil {
-			errStr := errs.Cause(err).Error()
 			if errs.Is(err, context.Canceled) {
 				return errs.Wrap(err)
 			}
-			fmt.Println(errStr)
+			fmt.Println(err.Error())
 		} else {
 			buf := &bytes.Buffer{}
 			if _, err := io.Copy(os.Stdout, io.TeeReader(r, buf)); err != nil {
@@ -47,7 +46,7 @@ func Do(opts *options.Options) error {
 	}
 }
 
-/* Copyright 2019-2021 Spiegel
+/* Copyright 2019-2023 Spiegel
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
