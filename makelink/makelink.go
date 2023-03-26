@@ -17,7 +17,7 @@ import (
 	"golang.org/x/net/html/charset"
 )
 
-//Link class is information of URL
+// Link class is information of URL
 type Link struct {
 	URL         string `json:"url,omitempty"`
 	Location    string `json:"location,omitempty"`
@@ -26,7 +26,7 @@ type Link struct {
 	Description string `json:"description,omitempty"`
 }
 
-//New returns new Link instance
+// New returns new Link instance
 func New(ctx context.Context, urlStr, userAgent string) (*Link, error) {
 	link := &Link{URL: urlStr}
 	u, err := fetch.URL(urlStr)
@@ -36,9 +36,9 @@ func New(ctx context.Context, urlStr, userAgent string) (*Link, error) {
 	if len(userAgent) == 0 {
 		userAgent = "goark/ml (+https://github.com/goark/ml)" //dummy user-agent string
 	}
-	resp, err := fetch.New(fetch.WithHTTPClient(&http.Client{})).Get(
+	resp, err := fetch.New(fetch.WithHTTPClient(&http.Client{})).GetWithContext(
+		ctx,
 		u,
-		fetch.WithContext(ctx),
 		fetch.WithRequestHeaderSet("User-Agent", userAgent),
 	)
 	if err != nil {
@@ -100,7 +100,7 @@ func trimString(s string) string {
 	return strings.TrimSpace(replacer.Replace(s))
 }
 
-//TitleName returns string of title name
+// TitleName returns string of title name
 func (lnk *Link) TitleName() string {
 	if lnk == nil {
 		return ""
@@ -111,7 +111,7 @@ func (lnk *Link) TitleName() string {
 	return lnk.URL
 }
 
-//CanonicalURL returns the canonical URL.
+// CanonicalURL returns the canonical URL.
 func (lnk *Link) CanonicalURL() string {
 	if lnk == nil {
 		return ""
@@ -125,7 +125,7 @@ func (lnk *Link) CanonicalURL() string {
 	return lnk.URL
 }
 
-//Encode returns string (io.Reader) with other style
+// Encode returns string (io.Reader) with other style
 func (lnk *Link) Encode(t Style) io.Reader {
 	if lnk == nil {
 		return io.NopCloser(bytes.NewReader(nil))
