@@ -22,6 +22,8 @@ jobs:
         uses: actions/setup-go@v3
         with:
           go-version-file: 'go.mod'
+      - name: install syft
+        run: go install github.com/anchore/syft/cmd/syft@latest
       -
         name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v4
