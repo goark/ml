@@ -11,7 +11,7 @@ require (
 	github.com/mattn/go-encoding v0.0.2
 	github.com/nyaosorg/go-readline-ny v0.8.4
 	github.com/spf13/cobra v1.6.1
-	golang.org/x/net v0.8.0
+	golang.org/x/net v0.17.0
 )
 
 require (
@@ -22,6 +22,6 @@ require (
 	github.com/mattn/go-runewidth v0.0.13 // indirect
 	github.com/rivo/uniseg v0.2.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
-	golang.org/x/sys v0.6.0 // indirect
-	golang.org/x/text v0.8.0 // indirect
+	golang.org/x/sys v0.13.0 // indirect
+	golang.org/x/text v0.13.0 // indirect
 )
