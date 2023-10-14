@@ -15,9 +15,12 @@ import (
 )
 
 func Do(opts *options.Options) error {
-	editor := readline.Editor{
-		Prompt:  func() (int, error) { return fmt.Print("ml> ") },
-		History: opts.History(),
+	editor := &readline.Editor{
+		PromptWriter: func(w io.Writer) (int, error) {
+			return io.WriteString(w, "ml> ")
+		},
+		History:        opts.History(),
+		HistoryCycling: true,
 	}
 	ctx := signal.Context(context.Background(), os.Interrupt)
 	fmt.Println("Input 'q' or 'quit' to stop")
