@@ -23,9 +23,10 @@ builds:
   - -trimpath
   ldflags: -s -w -X github.com/goark/ml/facade.Version=v{{ .Version }}
 
+source:
+  rlcp: true
 archives:
 -
-  rlcp: true
   format: tar.gz
   format_overrides:
     - goos: windows
@@ -53,9 +54,6 @@ changelog:
       - typo
       - Merge pull request
       - Merge branch
-
-sboms:
-  - artifacts: archive
 
 snapshot:
   name_template: SNAPSHOT-{{ .Commit }}
