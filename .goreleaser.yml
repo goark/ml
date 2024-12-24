@@ -24,9 +24,8 @@ builds:
   flags:
   - -trimpath
   ldflags: -s -w -X github.com/goark/ml/facade.Version=v{{ .Version }}
+  binary: ml
 
-source:
-  rlcp: true
 archives:
 -
   format: tar.gz
@@ -58,7 +57,7 @@ changelog:
       - Merge branch
 
 snapshot:
-  name_template: SNAPSHOT-{{ .Commit }}
+  version_template: SNAPSHOT-{{ .Commit }}
 
 checksum:
   name_template: '{{ .ProjectName }}_{{ .Version }}_checksums.txt'
