@@ -1,7 +1,6 @@
 module github.com/goark/ml
 
 go 1.23
-
 toolchain go1.23.4
 
 require (
@@ -13,7 +12,7 @@ require (
 	github.com/mattn/go-encoding v0.0.2
 	github.com/nyaosorg/go-readline-ny v1.6.2
 	github.com/spf13/cobra v1.8.1
-	golang.org/x/net v0.33.0
+	golang.org/x/net v0.36.0
 )
 
 require (
@@ -24,6 +23,6 @@ require (
 	github.com/mattn/go-tty v0.0.7 // indirect
 	github.com/rivo/uniseg v0.4.7 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
-	golang.org/x/sys v0.28.0 // indirect
-	golang.org/x/text v0.21.0 // indirect
+	golang.org/x/sys v0.30.0 // indirect
+	golang.org/x/text v0.22.0 // indirect
 )
