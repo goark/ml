@@ -13,7 +13,7 @@ require (
 	github.com/mattn/go-encoding v0.0.2
 	github.com/nyaosorg/go-readline-ny v1.9.0
 	github.com/spf13/cobra v1.9.1
-	golang.org/x/net v0.37.0
+	golang.org/x/net v0.38.0
 )
 
 require (
