@@ -5,7 +5,7 @@ go 1.24
 toolchain go1.24.1
 
 require (
-	github.com/PuerkitoBio/goquery v1.10.2
+	github.com/PuerkitoBio/goquery v1.10.3
 	github.com/atotto/clipboard v0.1.4
 	github.com/goark/errs v1.3.2
 	github.com/goark/fetch v0.4.2
@@ -13,7 +13,7 @@ require (
 	github.com/mattn/go-encoding v0.0.2
 	github.com/nyaosorg/go-readline-ny v1.9.0
 	github.com/spf13/cobra v1.9.1
-	golang.org/x/net v0.38.0
+	golang.org/x/net v0.39.0
 )
 
 require (
@@ -24,6 +24,6 @@ require (
 	github.com/mattn/go-tty v0.0.7 // indirect
 	github.com/rivo/uniseg v0.4.7 // indirect
 	github.com/spf13/pflag v1.0.6 // indirect
-	golang.org/x/sys v0.31.0 // indirect
-	golang.org/x/text v0.23.0 // indirect
+	golang.org/x/sys v0.32.0 // indirect
+	golang.org/x/text v0.24.0 // indirect
 )
