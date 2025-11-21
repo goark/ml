@@ -3,12 +3,12 @@ package ecode
 import "errors"
 
 var (
-	ErrNullPointer    = errors.New("Null reference instance")
-	ErrNoImplement    = errors.New("This style is not implementation")
+	ErrNullPointer    = errors.New("null reference instance")
+	ErrNoImplement    = errors.New("this style is not implementation")
 	ErrInvalidRequest = errors.New("invalid request")
 )
 
-/* Copyright 2019-2021 Spiegel
+/* Copyright 2019-2025 Spiegel
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.

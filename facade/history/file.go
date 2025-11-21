@@ -7,7 +7,7 @@ import (
 	"github.com/nyaosorg/go-readline-ny"
 )
 
-//HistoryFile is a history file class.
+// HistoryFile is a history file class.
 type HistoryFile struct {
 	*History
 	path string
@@ -15,13 +15,13 @@ type HistoryFile struct {
 
 var _ readline.IHistory = (*HistoryFile)(nil)
 
-//NewFile function returns new HistoryFile instance.
+// NewFile function returns new HistoryFile instance.
 func NewFile(size int, path string) *HistoryFile {
 	return &HistoryFile{History: New(size), path: path}
 }
 
-//Load method imports history data from file.
-func (hf *HistoryFile) Load() error {
+// Load method imports history data from file.
+func (hf *HistoryFile) Load() (err error) {
 	if hf == nil || hf.Size() == 0 || len(hf.path) == 0 {
 		return nil
 	}
@@ -29,12 +29,17 @@ func (hf *HistoryFile) Load() error {
 	if err != nil {
 		return errs.Wrap(err)
 	}
-	defer file.Close()
-	return hf.Import(file)
+	defer func() {
+		if cerr := file.Close(); cerr != nil {
+			err = errs.Join(err, cerr)
+		}
+	}()
+	err = hf.Import(file)
+	return
 }
 
-//Save method exports history data to file.
-func (hf *HistoryFile) Save() error {
+// Save method exports history data to file.
+func (hf *HistoryFile) Save() (err error) {
 	if hf == nil || hf.Size() == 0 || len(hf.path) == 0 {
 		return nil
 	}
@@ -43,11 +48,16 @@ func (hf *HistoryFile) Save() error {
 	if err != nil {
 		return errs.Wrap(err)
 	}
-	defer file.Close()
-	return hf.Export(file)
+	defer func() {
+		if cerr := file.Close(); cerr != nil {
+			err = errs.Join(err, cerr)
+		}
+	}()
+	err = hf.Export(file)
+	return
 }
 
-/* Copyright 2021 Spiegel
+/* Copyright 2021-2025 Spiegel
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
