@@ -27,8 +27,8 @@ type Link struct {
 }
 
 // New returns new Link instance
-func New(ctx context.Context, urlStr, userAgent string) (*Link, error) {
-	link := &Link{URL: urlStr}
+func New(ctx context.Context, urlStr, userAgent string) (link *Link, err error) {
+	link = &Link{URL: urlStr}
 	u, err := fetch.URL(urlStr)
 	if err != nil {
 		return link, errs.Wrap(err, errs.WithContext("url", urlStr))
@@ -44,7 +44,11 @@ func New(ctx context.Context, urlStr, userAgent string) (*Link, error) {
 	if err != nil {
 		return link, errs.Wrap(err, errs.WithContext("url", urlStr))
 	}
-	defer resp.Close()
+	defer func() {
+		if cerr := resp.Close(); cerr != nil {
+			err = errs.Join(err, cerr)
+		}
+	}()
 
 	link.Location = resp.Request().URL.String()
 
@@ -62,7 +66,8 @@ func New(ctx context.Context, urlStr, userAgent string) (*Link, error) {
 	}
 	doc, err := goquery.NewDocumentFromReader(r)
 	if err != nil {
-		return link, errs.Wrap(err)
+		err = errs.Wrap(err)
+		return
 	}
 
 	doc.Find("head").Each(func(_ int, s *goquery.Selection) {
@@ -87,7 +92,7 @@ func New(ctx context.Context, urlStr, userAgent string) (*Link, error) {
 			}
 		})
 	})
-	return link, nil
+	return
 }
 
 var replacer = strings.NewReplacer(
@@ -146,7 +151,7 @@ func (lnk *Link) Encode(t Style) io.Reader {
 	return buf
 }
 func escapeQuoteCsv(s string) string {
-	return strings.Replace(s, "\"", "\"\"", -1)
+	return strings.ReplaceAll(s, "\"", "\"\"")
 }
 
 func (lnk *Link) String() string {
@@ -156,7 +161,7 @@ func (lnk *Link) String() string {
 	return fmt.Sprint(lnk.Encode(StyleJSON))
 }
 
-/* Copyright 2017-2023 Spiegel
+/* Copyright 2017-2025 Spiegel
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.

@@ -3,18 +3,21 @@ package facade
 import (
 	"fmt"
 
+	"github.com/goark/errs"
 	"github.com/goark/gocli/rwi"
 )
 
 func debugPrint(ui *rwi.RWI, err error) error {
 	if debugFlag && err != nil {
-		fmt.Fprintf(ui.Writer(), "%+v\n", err)
+		if _, perr := fmt.Fprintf(ui.Writer(), "%+v\n", err); perr != nil {
+			return errs.Join(err, perr)
+		}
 		return nil
 	}
 	return err
 }
 
-/* Copyright 2020 Spiegel
+/* Copyright 2020-2025 Spiegel
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
