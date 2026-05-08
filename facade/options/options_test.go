@@ -25,7 +25,7 @@ func TestMakeLink(t *testing.T) {
 		t.Errorf("Error in io.Copy(): %+v", err)
 	}
 
-	res := "[GitHub - goark/ml: Make Link with Markdown Format](https://github.com/goark/ml)"
+	res := "[GitHub - goark/ml: Make Link with Markdown Format · GitHub](https://github.com/goark/ml)"
 	str := outBuf.String()
 	if str != res {
 		t.Errorf("Context.MakeLink() = \"%v\", want \"%v\".", str, res)
@@ -46,7 +46,7 @@ func TestMakeLinkNil(t *testing.T) {
 		t.Errorf("Error in io.Copy(): %+v", err)
 	}
 
-	res := "[GitHub - goark/ml: Make Link with Markdown Format](https://github.com/goark/ml)"
+	res := "[GitHub - goark/ml: Make Link with Markdown Format · GitHub](https://github.com/goark/ml)"
 	str := outBuf.String()
 	if str != res {
 		t.Errorf("Context.MakeLink()  = \"%v\", want \"%v\".", str, res)
