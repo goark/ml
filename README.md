@@ -6,7 +6,7 @@
 [![GitHub license](https://img.shields.io/badge/license-Apache%202-blue.svg)](https://raw.githubusercontent.com/goark/ml/master/LICENSE)
 [![GitHub release](http://img.shields.io/github/release/goark/ml.svg)](https://github.com/goark/ml/releases/latest)
 
-This package is required Go 1.16 or later.
+This package is required Go 1.26.3 or later.
 
 **Migrated repository to [github.com/goark/ml][ml]**
 
@@ -39,19 +39,19 @@ Flags:
 
 ```
 $ ml https://git.io/vFR5M
-[GitHub - goark/ml: Make Link with Markdown Format](https://github.com/goark/ml)
+[GitHub - goark/ml: Make Link with Markdown Format · GitHub](https://github.com/goark/ml)
 ```
 
 ```
 $ echo https://git.io/vFR5M | ml
-[GitHub - goark/ml: Make Link with Markdown Format](https://github.com/goark/ml)
+[GitHub - goark/ml: Make Link with Markdown Format · GitHub](https://github.com/goark/ml)
 ```
 
 ### Support Other Styles
 
 ```
 $ ml -s html https://git.io/vFR5M
-<a href="https://github.com/goark/ml">GitHub - goark/ml: Make Link with Markdown Format</a>
+<a href="https://github.com/goark/ml">GitHub - goark/ml: Make Link with Markdown Format · GitHub</a>
 ```
 
 Support Styles: `markdown`, `wiki`, `html`, `csv`, `json`
@@ -62,7 +62,7 @@ Support Styles: `markdown`, `wiki`, `html`, `csv`, `json`
 $ ml -i
 Input 'q' or 'quit' to stop
 ml> https://git.io/vFR5M
-[GitHub - goark/ml: Make Link with Markdown Format](https://github.com/goark/ml)
+[GitHub - goark/ml: Make Link with Markdown Format · GitHub](https://github.com/goark/ml)
 ml>
 ```
 
@@ -88,7 +88,7 @@ func main() {
     }
     _, _ = io.Copy(os.Stdout, lnk.Encode(makelink.StyleMarkdown))
     // Output:
-    // [GitHub - goark/ml: Make Link with Markdown Format](https://github.com/goark/ml)
+    // [GitHub - goark/ml: Make Link with Markdown Format · GitHub](https://github.com/goark/ml)
 }
 ```
 

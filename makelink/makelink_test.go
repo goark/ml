@@ -82,10 +82,10 @@ func ExampleNew() {
 	}
 	fmt.Println(link.Encode(StyleMarkdown))
 	// Output:
-	// [GitHub - goark/ml: Make Link with Markdown Format](https://github.com/goark/ml)
+	// [GitHub - goark/ml: Make Link with Markdown Format · GitHub](https://github.com/goark/ml)
 }
 
-/* Copyright 2017-2021 Spiegel
+/* Copyright 2017-2026 Spiegel
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
