@@ -1,6 +1,7 @@
 package history
 
 import (
+	"errors"
 	"os"
 
 	"github.com/goark/errs"
@@ -27,6 +28,10 @@ func (hf *HistoryFile) Load() (err error) {
 	}
 	file, err := os.Open(hf.path)
 	if err != nil {
+		// Missing history file on first run is expected.
+		if errors.Is(err, os.ErrNotExist) {
+			return nil
+		}
 		return errs.Wrap(err)
 	}
 	defer func() {
@@ -43,8 +48,8 @@ func (hf *HistoryFile) Save() (err error) {
 	if hf == nil || hf.Size() == 0 || len(hf.path) == 0 {
 		return nil
 	}
-	// file, err := os.Create(hf.path)
-	file, err := os.OpenFile(hf.path, os.O_RDWR|os.O_CREATE, 0600)
+	// Use OpenFile to preserve explicit 0600 permission while truncating stale data.
+	file, err := os.OpenFile(hf.path, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0600)
 	if err != nil {
 		return errs.Wrap(err)
 	}
@@ -57,7 +62,7 @@ func (hf *HistoryFile) Save() (err error) {
 	return
 }
 
-/* Copyright 2021-2025 Spiegel
+/* Copyright 2021-2026 Spiegel
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.

@@ -62,7 +62,10 @@ func newRootCmd(ui *rwi.RWI, args []string) *cobra.Command {
 				if err := mkdirHistory(); err != nil {
 					_ = ui.OutputErrln(err)
 				} else if err := hist.Load(); err != nil {
-					_ = ui.OutputErrln(err)
+					// First run can have no history file; keep other load errors visible.
+					if !os.IsNotExist(err) {
+						_ = ui.OutputErrln(err)
+					}
 				}
 			}
 			defer func() {
@@ -161,7 +164,7 @@ func Execute(ui *rwi.RWI, args []string) (exit exitcode.ExitCode) {
 	return
 }
 
-/* Copyright 2017-2021 Spiegel
+/* Copyright 2017-2026 Spiegel
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.

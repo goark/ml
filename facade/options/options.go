@@ -33,15 +33,15 @@ func (c *Options) MakeLink(ctx context.Context, urlStr string) (io.Reader, error
 	if c == nil {
 		return nil, errs.Wrap(ecode.ErrNullPointer)
 	}
-	c.History().Add(urlStr)
 	lnk, err := makelink.New(ctx, urlStr, c.userAgent)
 	if err != nil {
 		return nil, errs.Wrap(err)
 	}
+	c.History().Add(urlStr)
 	return lnk.Encode(c.linkStyle), nil
 }
 
-/* Copyright 2017-2021 Spiegel
+/* Copyright 2017-2026 Spiegel
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
