@@ -10,14 +10,14 @@ import (
 	"github.com/goark/ml/makelink"
 )
 
-//Options class is Options for making link
+// Options holds settings for link generation.
 type Options struct {
 	linkStyle makelink.Style
 	hist      *history.HistoryFile
 	userAgent string
 }
 
-//New returns new Options instance
+// New returns a new Options instance.
 func New(s makelink.Style, hist *history.HistoryFile, userAgent string) *Options {
 	if hist == nil {
 		hist = history.NewFile(0, "")
@@ -25,23 +25,23 @@ func New(s makelink.Style, hist *history.HistoryFile, userAgent string) *Options
 	return &Options{linkStyle: s, hist: hist, userAgent: userAgent}
 }
 
-//History method returns history.HistoryFile instance.
+// History returns the history store.
 func (c *Options) History() *history.HistoryFile { return c.hist }
 
-//MakeLink is making link
+// MakeLink creates an encoded link from the given URL.
 func (c *Options) MakeLink(ctx context.Context, urlStr string) (io.Reader, error) {
 	if c == nil {
 		return nil, errs.Wrap(ecode.ErrNullPointer)
 	}
-	c.History().Add(urlStr)
 	lnk, err := makelink.New(ctx, urlStr, c.userAgent)
 	if err != nil {
 		return nil, errs.Wrap(err)
 	}
+	c.History().Add(urlStr)
 	return lnk.Encode(c.linkStyle), nil
 }
 
-/* Copyright 2017-2021 Spiegel
+/* Copyright 2017-2026 Spiegel
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.

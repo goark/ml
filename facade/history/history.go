@@ -9,7 +9,7 @@ import (
 	"github.com/nyaosorg/go-readline-ny"
 )
 
-//History is a ring-buffer class for history (string) data.
+// History is a ring buffer for command history strings.
 type History struct {
 	head, tail int
 	buffer     []string
@@ -17,6 +17,7 @@ type History struct {
 
 var _ readline.IHistory = (*History)(nil)
 
+// New returns a History with the given size.
 func New(size int) *History {
 	if size < 1 {
 		return nil
@@ -24,7 +25,7 @@ func New(size int) *History {
 	return &History{head: 0, tail: -1, buffer: make([]string, size)}
 }
 
-//Len method returns count of buffering strings.
+// Len returns the number of entries currently buffered.
 func (hist *History) Len() int {
 	if hist.Size() == 0 {
 		return 0
@@ -44,7 +45,7 @@ func (hist *History) Len() int {
 	return hist.tail - hist.head
 }
 
-//At method returns .histroty (string) data at index.
+// At returns the entry at index n.
 func (hist *History) At(n int) string {
 	if hist.Size() == 0 || n >= hist.Len() {
 		return ""
@@ -53,7 +54,7 @@ func (hist *History) At(n int) string {
 	return hist.buffer[i]
 }
 
-//Size method returns size of history buffer.
+// Size returns the capacity of the history buffer.
 func (hist *History) Size() int {
 	if hist == nil {
 		return 0
@@ -61,7 +62,7 @@ func (hist *History) Size() int {
 	return len(hist.buffer)
 }
 
-//Add method adds new string in history buffer.
+// Add appends a new history entry.
 func (hist *History) Add(s string) {
 	if hist.Size() == 0 || len(s) == 0 {
 		return
@@ -82,7 +83,7 @@ func (hist *History) Add(s string) {
 	}
 }
 
-//Import method imports history data from reader.
+// Import loads history entries from r.
 func (hist *History) Import(r io.Reader) error {
 	if hist.Size() == 0 {
 		return nil
@@ -94,7 +95,7 @@ func (hist *History) Import(r io.Reader) error {
 	return errs.Wrap(scanner.Err())
 }
 
-//Export method exports history data to writer.
+// Export writes all history entries to w.
 func (hist *History) Export(w io.Writer) error {
 	for i := 0; i < hist.Len(); i++ {
 		if _, err := fmt.Fprintln(w, hist.At(i)); err != nil {

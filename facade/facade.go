@@ -17,9 +17,9 @@ import (
 )
 
 var (
-	//Name is applicatin name
+	// Name is the application name.
 	Name = "ml"
-	//Version is version for applicatin
+	// Version is the application version.
 	Version = "dev-version"
 )
 
@@ -29,7 +29,7 @@ var (
 	debugFlag       bool //debug flag
 )
 
-//newRootCmd returns cobra.Command instance for root command
+// newRootCmd returns the root cobra command.
 func newRootCmd(ui *rwi.RWI, args []string) *cobra.Command {
 	rootCmd := &cobra.Command{
 		Use: Name + " [flags] [URL [URL]...]",
@@ -62,7 +62,10 @@ func newRootCmd(ui *rwi.RWI, args []string) *cobra.Command {
 				if err := mkdirHistory(); err != nil {
 					_ = ui.OutputErrln(err)
 				} else if err := hist.Load(); err != nil {
-					_ = ui.OutputErrln(err)
+					// First run can have no history file; keep other load errors visible.
+					if !os.IsNotExist(err) {
+						_ = ui.OutputErrln(err)
+					}
 				}
 			}
 			defer func() {
@@ -136,7 +139,7 @@ func newRootCmd(ui *rwi.RWI, args []string) *cobra.Command {
 	return rootCmd
 }
 
-//Execute is called from main function
+// Execute runs CLI processing and returns an exit code.
 func Execute(ui *rwi.RWI, args []string) (exit exitcode.ExitCode) {
 	defer func() {
 		//panic hundling
@@ -161,7 +164,7 @@ func Execute(ui *rwi.RWI, args []string) (exit exitcode.ExitCode) {
 	return
 }
 
-/* Copyright 2017-2021 Spiegel
+/* Copyright 2017-2026 Spiegel
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.

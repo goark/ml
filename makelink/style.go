@@ -7,21 +7,21 @@ import (
 	"github.com/goark/ml/ecode"
 )
 
-//Style as link style
+// Style represents a link output style.
 type Style int
 
 const (
-	//StyleUnknown is unknown link style
+	// StyleUnknown is an unknown link style.
 	StyleUnknown Style = iota
-	//StyleMarkdown is unknown markdown style
+	// StyleMarkdown is markdown style.
 	StyleMarkdown
-	//StyleWiki is unknown wiki style
+	// StyleWiki is wiki style.
 	StyleWiki
-	//StyleHTML is unknown HTML anchor style
+	// StyleHTML is HTML anchor style.
 	StyleHTML
-	//StyleCSV is CSV data format
+	// StyleCSV is CSV data format.
 	StyleCSV
-	//StyleJSON is JSON format
+	// StyleJSON is JSON format.
 	StyleJSON
 )
 
@@ -42,12 +42,12 @@ var (
 	}
 )
 
-//StyleList returns string Style list
+// StyleList returns supported style names.
 func StyleList() string {
 	return strings.Join(styleList, "|")
 }
 
-//GetStyle returns Style from string
+// GetStyle returns a Style from its string representation.
 func GetStyle(s string) (Style, error) {
 	for t, v := range styleMap {
 		if strings.EqualFold(v, s) {

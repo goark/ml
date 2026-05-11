@@ -1,23 +1,18 @@
 package makelink
 
 import (
-	"bufio"
 	"bytes"
 	"context"
 	"encoding/json"
 	"fmt"
 	"io"
-	"net/http"
 	"strings"
 
-	"github.com/PuerkitoBio/goquery"
 	"github.com/goark/errs"
-	"github.com/goark/fetch"
-	encoding "github.com/mattn/go-encoding"
-	"golang.org/x/net/html/charset"
+	"github.com/goark/webinfo"
 )
 
-// Link class is information of URL
+// Link stores metadata of a URL.
 type Link struct {
 	URL         string `json:"url,omitempty"`
 	Location    string `json:"location,omitempty"`
@@ -26,72 +21,21 @@ type Link struct {
 	Description string `json:"description,omitempty"`
 }
 
-// New returns new Link instance
+// New fetches URL metadata and returns a Link instance.
 func New(ctx context.Context, urlStr, userAgent string) (link *Link, err error) {
 	link = &Link{URL: urlStr}
-	u, err := fetch.URL(urlStr)
+	info, err := webinfo.Fetch(ctx, urlStr, userAgent)
 	if err != nil {
 		return link, errs.Wrap(err, errs.WithContext("url", urlStr))
 	}
-	if len(userAgent) == 0 {
-		userAgent = "goark/ml (+https://github.com/goark/ml)" //dummy user-agent string
+	link.URL = trimString(info.URL)
+	if len(link.URL) == 0 {
+		link.URL = urlStr
 	}
-	resp, err := fetch.New(fetch.WithHTTPClient(&http.Client{})).GetWithContext(
-		ctx,
-		u,
-		fetch.WithRequestHeaderSet("User-Agent", userAgent),
-	)
-	if err != nil {
-		return link, errs.Wrap(err, errs.WithContext("url", urlStr))
-	}
-	defer func() {
-		if cerr := resp.Close(); cerr != nil {
-			err = errs.Join(err, cerr)
-		}
-	}()
-
-	link.Location = resp.Request().URL.String()
-
-	br := bufio.NewReader(resp.Body())
-	var r io.Reader = br
-	if data, err2 := br.Peek(1024); err2 == nil { //next 1024 bytes without advancing the reader.
-		enc, name, _ := charset.DetermineEncoding(data, resp.Header().Get("content-type"))
-		if enc != nil {
-			r = enc.NewDecoder().Reader(br)
-		} else if len(name) > 0 {
-			if enc := encoding.GetEncoding(name); enc != nil {
-				r = enc.NewDecoder().Reader(br)
-			}
-		}
-	}
-	doc, err := goquery.NewDocumentFromReader(r)
-	if err != nil {
-		err = errs.Wrap(err)
-		return
-	}
-
-	doc.Find("head").Each(func(_ int, s *goquery.Selection) {
-		s.Find("title").Each(func(_ int, s *goquery.Selection) {
-			t := s.Text()
-			if len(t) > 0 {
-				link.Title = trimString(t)
-			}
-		})
-		s.Find("meta[name='description']").Each(func(_ int, s *goquery.Selection) {
-			if v, ok := s.Attr("content"); ok {
-				if len(v) > 0 {
-					link.Description = trimString(v)
-				}
-			}
-		})
-		s.Find("link[rel='canonical']").Each(func(_ int, s *goquery.Selection) {
-			if v, ok := s.Attr("href"); ok {
-				if len(v) > 0 {
-					link.Canonical = trimString(v)
-				}
-			}
-		})
-	})
+	link.Location = trimString(info.Location)
+	link.Canonical = trimString(info.Canonical)
+	link.Title = trimString(info.Title)
+	link.Description = trimString(info.Description)
 	return
 }
 
@@ -105,7 +49,7 @@ func trimString(s string) string {
 	return strings.TrimSpace(replacer.Replace(s))
 }
 
-// TitleName returns string of title name
+// TitleName returns the display title.
 func (lnk *Link) TitleName() string {
 	if lnk == nil {
 		return ""
@@ -116,7 +60,7 @@ func (lnk *Link) TitleName() string {
 	return lnk.URL
 }
 
-// CanonicalURL returns the canonical URL.
+// CanonicalURL returns the canonical URL when available.
 func (lnk *Link) CanonicalURL() string {
 	if lnk == nil {
 		return ""
@@ -130,7 +74,7 @@ func (lnk *Link) CanonicalURL() string {
 	return lnk.URL
 }
 
-// Encode returns string (io.Reader) with other style
+// Encode encodes Link in the requested style.
 func (lnk *Link) Encode(t Style) io.Reader {
 	if lnk == nil {
 		return io.NopCloser(bytes.NewReader(nil))
@@ -154,6 +98,7 @@ func escapeQuoteCsv(s string) string {
 	return strings.ReplaceAll(s, "\"", "\"\"")
 }
 
+// String returns Link as JSON text.
 func (lnk *Link) String() string {
 	if lnk == nil {
 		return ""
@@ -161,7 +106,7 @@ func (lnk *Link) String() string {
 	return fmt.Sprint(lnk.Encode(StyleJSON))
 }
 
-/* Copyright 2017-2025 Spiegel
+/* Copyright 2017-2026 Spiegel
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
