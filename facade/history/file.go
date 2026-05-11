@@ -7,7 +7,7 @@ import (
 	"github.com/nyaosorg/go-readline-ny"
 )
 
-// HistoryFile is a history file class.
+// HistoryFile stores history entries backed by a file.
 type HistoryFile struct {
 	*History
 	path string
@@ -15,12 +15,12 @@ type HistoryFile struct {
 
 var _ readline.IHistory = (*HistoryFile)(nil)
 
-// NewFile function returns new HistoryFile instance.
+// NewFile returns a new HistoryFile.
 func NewFile(size int, path string) *HistoryFile {
 	return &HistoryFile{History: New(size), path: path}
 }
 
-// Load method imports history data from file.
+// Load imports history entries from the file.
 func (hf *HistoryFile) Load() (err error) {
 	if hf == nil || hf.Size() == 0 || len(hf.path) == 0 {
 		return nil
@@ -38,7 +38,7 @@ func (hf *HistoryFile) Load() (err error) {
 	return
 }
 
-// Save method exports history data to file.
+// Save writes history entries to the file.
 func (hf *HistoryFile) Save() (err error) {
 	if hf == nil || hf.Size() == 0 || len(hf.path) == 0 {
 		return nil

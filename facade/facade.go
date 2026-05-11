@@ -17,9 +17,9 @@ import (
 )
 
 var (
-	//Name is applicatin name
+	// Name is the application name.
 	Name = "ml"
-	//Version is version for applicatin
+	// Version is the application version.
 	Version = "dev-version"
 )
 
@@ -29,7 +29,7 @@ var (
 	debugFlag       bool //debug flag
 )
 
-//newRootCmd returns cobra.Command instance for root command
+// newRootCmd returns the root cobra command.
 func newRootCmd(ui *rwi.RWI, args []string) *cobra.Command {
 	rootCmd := &cobra.Command{
 		Use: Name + " [flags] [URL [URL]...]",
@@ -136,7 +136,7 @@ func newRootCmd(ui *rwi.RWI, args []string) *cobra.Command {
 	return rootCmd
 }
 
-//Execute is called from main function
+// Execute runs CLI processing and returns an exit code.
 func Execute(ui *rwi.RWI, args []string) (exit exitcode.ExitCode) {
 	defer func() {
 		//panic hundling

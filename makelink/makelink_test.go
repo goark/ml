@@ -5,6 +5,8 @@ import (
 	"context"
 	"fmt"
 	"io"
+	"net/http"
+	"net/http/httptest"
 	"os"
 	"testing"
 )
@@ -66,11 +68,38 @@ func TestString(t *testing.T) {
 }
 
 func TestNewErr(t *testing.T) {
-	_, err := New(context.Background(), "https://foo.bar", "")
+	_, err := New(context.Background(), "://bad-url", "")
 	if err == nil {
 		t.Error("New()  = nil error, not want nil error.")
 	} else {
 		fmt.Fprintf(os.Stderr, "info: %+v\n", err)
+	}
+}
+
+func TestNew(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+		_, _ = io.WriteString(w, `<!doctype html><html><head><title>Example Title</title><meta name="description" content="Example Description"><link rel="canonical" href="https://example.com/canonical"></head><body></body></html>`)
+	}))
+	defer srv.Close()
+
+	link, err := New(context.Background(), srv.URL, "")
+	if err != nil {
+		t.Fatalf("New() error = %v", err)
+	}
+	if link.URL != srv.URL {
+		t.Errorf("URL = %q, want %q", link.URL, srv.URL)
+	}
+	if link.Location != srv.URL {
+		t.Errorf("Location = %q, want %q", link.Location, srv.URL)
+	}
+	if link.Canonical != "https://example.com/canonical" {
+		t.Errorf("Canonical = %q, want %q", link.Canonical, "https://example.com/canonical")
+	}
+	if link.Title != "Example Title" {
+		t.Errorf("Title = %q, want %q", link.Title, "Example Title")
+	}
+	if link.Description != "Example Description" {
+		t.Errorf("Description = %q, want %q", link.Description, "Example Description")
 	}
 }
 
@@ -81,8 +110,6 @@ func ExampleNew() {
 		return
 	}
 	fmt.Println(link.Encode(StyleMarkdown))
-	// Output:
-	// [GitHub - goark/ml: Make Link with Markdown Format · GitHub](https://github.com/goark/ml)
 }
 
 /* Copyright 2017-2026 Spiegel

@@ -14,6 +14,7 @@ import (
 	"github.com/nyaosorg/go-readline-ny"
 )
 
+// Do runs the interactive prompt loop.
 func Do(opts *options.Options) error {
 	editor := &readline.Editor{
 		PromptWriter: func(w io.Writer) (int, error) {
