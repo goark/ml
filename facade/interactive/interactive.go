@@ -6,10 +6,10 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"os/signal"
 
 	"github.com/atotto/clipboard"
 	"github.com/goark/errs"
-	"github.com/goark/gocli/signal"
 	"github.com/goark/ml/facade/options"
 	"github.com/nyaosorg/go-readline-ny"
 )
@@ -23,7 +23,8 @@ func Do(opts *options.Options) error {
 		History:        opts.History(),
 		HistoryCycling: true,
 	}
-	ctx := signal.Context(context.Background(), os.Interrupt)
+	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt)
+	defer cancel()
 	fmt.Println("Input 'q' or 'quit' to stop")
 	for {
 		text, err := editor.ReadLine(context.Background())

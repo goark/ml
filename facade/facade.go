@@ -4,11 +4,11 @@ import (
 	"bufio"
 	"context"
 	"os"
+	"os/signal"
 	"runtime"
 
 	"github.com/goark/gocli/exitcode"
 	"github.com/goark/gocli/rwi"
-	"github.com/goark/gocli/signal"
 	"github.com/goark/ml/facade/history"
 	"github.com/goark/ml/facade/interactive"
 	"github.com/goark/ml/facade/options"
@@ -83,7 +83,8 @@ func newRootCmd(ui *rwi.RWI, args []string) *cobra.Command {
 				}
 			} else {
 				//command line
-				ctx := signal.Context(context.Background(), os.Interrupt)
+				ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt)
+				defer cancel()
 				if len(args) > 0 {
 					var lastErr error
 					for _, arg := range args {
