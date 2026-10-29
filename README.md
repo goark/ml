@@ -21,7 +21,7 @@ in multiple output styles (`markdown`, `wiki`, `html`, `csv`, `json`).
 
 ### Requirements
 
-- Go 1.26.3 or later
+- Go 1.27.3 or later
 - [Task](https://taskfile.dev/) command (local tool for this repository)
 
 ### Local validation
