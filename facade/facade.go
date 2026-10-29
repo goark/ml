@@ -17,10 +17,8 @@ import (
 )
 
 var (
-	// Name is the application name.
-	Name = "ml"
 	// Version is the application version.
-	Version = "dev-version"
+	Version = ""
 )
 
 var (
@@ -32,11 +30,11 @@ var (
 // newRootCmd returns the root cobra command.
 func newRootCmd(ui *rwi.RWI, args []string) *cobra.Command {
 	rootCmd := &cobra.Command{
-		Use: Name + " [flags] [URL [URL]...]",
+		Use: appNameShort + " [flags] [URL [URL]...]",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			//parse options
 			if versionFlag {
-				return ui.OutputErrln(Name, Version)
+				return ui.OutputErrln(NewVersionString(Version))
 			}
 
 			strStyle, err := cmd.Flags().GetString("style")
@@ -48,6 +46,10 @@ func newRootCmd(ui *rwi.RWI, args []string) *cobra.Command {
 				return debugPrint(ui, err)
 			}
 			userAgent, err := cmd.Flags().GetString("user-agent")
+			if err != nil {
+				return debugPrint(ui, err)
+			}
+			forceHTTP11, err := cmd.Flags().GetBool("force-http11")
 			if err != nil {
 				return debugPrint(ui, err)
 			}
@@ -75,7 +77,7 @@ func newRootCmd(ui *rwi.RWI, args []string) *cobra.Command {
 			}()
 
 			//set options
-			opts := options.New(style, hist, userAgent)
+			opts := options.New(style, hist, userAgent, forceHTTP11)
 			if interactiveFlag {
 				//interactive mode
 				if err := interactive.Do(opts); err != nil {
@@ -130,12 +132,13 @@ func newRootCmd(ui *rwi.RWI, args []string) *cobra.Command {
 	rootCmd.SetOut(ui.ErrorWriter()) //Stdout -> Stderr
 	rootCmd.SetErr(ui.ErrorWriter()) //Stderr
 
-	rootCmd.Flags().BoolVarP(&versionFlag, "version", "v", false, "output version of "+Name)
+	rootCmd.Flags().BoolVarP(&versionFlag, "version", "v", false, "output version of "+appNameShort)
 	rootCmd.Flags().BoolVarP(&interactiveFlag, "interactive", "i", false, "interactive mode")
 	rootCmd.Flags().BoolVarP(&debugFlag, "debug", "", false, "for debug")
 	rootCmd.Flags().StringP("style", "s", makelink.StyleMarkdown.String(), "link style ["+makelink.StyleList()+"]")
 	rootCmd.Flags().StringP("user-agent", "a", "", "User-Agent string")
 	rootCmd.Flags().IntP("log", "l", 0, "history log size")
+	rootCmd.Flags().BoolP("force-http11", "", false, "force HTTP/1.1 for requests")
 
 	return rootCmd
 }

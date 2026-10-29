@@ -12,17 +12,18 @@ import (
 
 // Options holds settings for link generation.
 type Options struct {
-	linkStyle makelink.Style
-	hist      *history.HistoryFile
-	userAgent string
+	linkStyle   makelink.Style
+	hist        *history.HistoryFile
+	userAgent   string
+	forceHTTP11 bool
 }
 
 // New returns a new Options instance.
-func New(s makelink.Style, hist *history.HistoryFile, userAgent string) *Options {
+func New(s makelink.Style, hist *history.HistoryFile, userAgent string, forceHTTP11 bool) *Options {
 	if hist == nil {
 		hist = history.NewFile(0, "")
 	}
-	return &Options{linkStyle: s, hist: hist, userAgent: userAgent}
+	return &Options{linkStyle: s, hist: hist, userAgent: userAgent, forceHTTP11: forceHTTP11}
 }
 
 // History returns the history store.
@@ -33,7 +34,7 @@ func (c *Options) MakeLink(ctx context.Context, urlStr string) (io.Reader, error
 	if c == nil {
 		return nil, errs.Wrap(ecode.ErrNullPointer)
 	}
-	lnk, err := makelink.New(ctx, urlStr, c.userAgent)
+	lnk, err := makelink.New(ctx, urlStr, c.userAgent, c.forceHTTP11)
 	if err != nil {
 		return nil, errs.Wrap(err)
 	}

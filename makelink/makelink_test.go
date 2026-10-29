@@ -68,7 +68,7 @@ func TestString(t *testing.T) {
 }
 
 func TestNewErr(t *testing.T) {
-	_, err := New(context.Background(), "://bad-url", "")
+	_, err := New(context.Background(), "://bad-url", "", false)
 	if err == nil {
 		t.Error("New()  = nil error, not want nil error.")
 	} else {
@@ -82,7 +82,7 @@ func TestNew(t *testing.T) {
 	}))
 	defer srv.Close()
 
-	link, err := New(context.Background(), srv.URL, "")
+	link, err := New(context.Background(), srv.URL, "", false)
 	if err != nil {
 		t.Fatalf("New() error = %v", err)
 	}
@@ -104,7 +104,7 @@ func TestNew(t *testing.T) {
 }
 
 func ExampleNew() {
-	link, err := New(context.Background(), "https://git.io/vFR5M", "")
+	link, err := New(context.Background(), "https://git.io/vFR5M", "", false)
 	if err != nil {
 		fmt.Println(err)
 		return
