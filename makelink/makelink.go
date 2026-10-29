@@ -22,9 +22,9 @@ type Link struct {
 }
 
 // New fetches URL metadata and returns a Link instance.
-func New(ctx context.Context, urlStr, userAgent string) (link *Link, err error) {
+func New(ctx context.Context, urlStr, userAgent string, forceHTTP11 bool) (link *Link, err error) {
 	link = &Link{URL: urlStr}
-	info, err := webinfo.Fetch(ctx, urlStr, userAgent)
+	info, err := webinfo.Fetch(ctx, urlStr, userAgent, forceHTTP11)
 	if err != nil {
 		return link, errs.Wrap(err, errs.WithContext("url", urlStr))
 	}

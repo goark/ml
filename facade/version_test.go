@@ -1,36 +1,54 @@
 package facade
 
 import (
-	"bytes"
+	"strings"
 	"testing"
-
-	"github.com/goark/gocli/exitcode"
-	"github.com/goark/gocli/rwi"
 )
 
-func TestVersionMin(t *testing.T) {
-	result := "ml dev-version\n"
-
-	outBuf := new(bytes.Buffer)
-	outErrBuf := new(bytes.Buffer)
-	ui := rwi.New(rwi.WithWriter(outBuf), rwi.WithErrorWriter(outErrBuf))
-	args := []string{"-v"}
-
-	exit := Execute(ui, args)
-	if exit != exitcode.Normal {
-		t.Errorf("Execute(version) = \"%v\", want \"%v\".", exit, exitcode.Normal)
-	}
-	str := outBuf.String()
-	if str != "" {
-		t.Errorf("Execute(version) = \"%v\", want \"%v\".", str, "")
-	}
-	str = outErrBuf.String()
-	if str != result {
-		t.Errorf("Execute(version) = \"%v\", want \"%v\".", str, result)
+func TestNewVersionString(t *testing.T) {
+	getGoVersion = func() string { return "(build with go1.27.3)" }
+	got := NewVersionString("v1.2.3").String()
+	want := "ml v1.2.3 (build with go1.27.3)\nhttps://github.com/goark/ml"
+	if got != want {
+		t.Fatalf("NewVersionString().String() = %q, want %q", got, want)
 	}
 }
 
-/* Copyright 2017-2019 Spiegel
+func TestReplaceVersion_WithExplicitVersion(t *testing.T) {
+	getGoVersion = func() string { return "(build with go1.27.3)" }
+	got := replaceVersion("v9.9.9")
+	want := "v9.9.9 (build with go1.27.3)"
+	if got != want {
+		t.Fatalf("replaceVersion() = %q, want %q", got, want)
+	}
+}
+
+func TestNewVersionString_EmptyVersionUsesFallback(t *testing.T) {
+	got := NewVersionString("").String()
+	lines := strings.Split(got, "\n")
+	if len(lines) != 2 {
+		t.Fatalf("version string line count = %d, want %d: %q", len(lines), 2, got)
+	}
+	if !strings.HasPrefix(lines[0], "ml ") {
+		t.Fatalf("first line = %q, want prefix %q", lines[0], "ml ")
+	}
+	if lines[0] == "ml " {
+		t.Fatal("first line has empty version payload")
+	}
+	if lines[1] != "https://github.com/goark/ml" {
+		t.Fatalf("second line = %q, want %q", lines[1], "https://github.com/goark/ml")
+	}
+}
+
+func TestJoinNonEmpty(t *testing.T) {
+	got := joinNonEmpty("abc123", "", "(build with go1.26.5)")
+	want := "abc123 (build with go1.26.5)"
+	if got != want {
+		t.Fatalf("joinNonEmpty() = %q, want %q", got, want)
+	}
+}
+
+/* Copyright 2017-2026 Spiegel
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.

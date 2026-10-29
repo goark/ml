@@ -9,14 +9,14 @@ import (
 const logFile = "history"
 
 func historyPath() string {
-	return config.Path(Name, logFile)
+	return config.Path(appNameShort, logFile)
 }
 
 func mkdirHistory() error {
-	return os.MkdirAll(config.Dir(Name), 0700)
+	return os.MkdirAll(config.Dir(appNameShort), 0700)
 }
 
-/* Copyright 2017-2021 Spiegel
+/* Copyright 2017-2026 Spiegel
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.

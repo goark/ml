@@ -26,7 +26,7 @@ func TestMakeLink(t *testing.T) {
 	defer srv.Close()
 
 	urlStr := srv.URL
-	opt := options.New(makelink.StyleMarkdown, history.NewFile(1, ""), "")
+	opt := options.New(makelink.StyleMarkdown, history.NewFile(1, ""), "", false)
 	rRes, err := opt.MakeLink(context.Background(), urlStr)
 	if err != nil {
 		t.Errorf("Error in Context.MakeLink(): %+v", err)
@@ -51,7 +51,7 @@ func TestMakeLinkNil(t *testing.T) {
 	srv := newTestServer()
 	defer srv.Close()
 
-	rRes, err := options.New(makelink.StyleMarkdown, nil, "").MakeLink(context.Background(), srv.URL)
+	rRes, err := options.New(makelink.StyleMarkdown, nil, "", false).MakeLink(context.Background(), srv.URL)
 	if err != nil {
 		t.Errorf("Error in Context.MakeLink(): %+v", err)
 	}
@@ -68,7 +68,7 @@ func TestMakeLinkNil(t *testing.T) {
 }
 
 func TestMakeLinkErr(t *testing.T) {
-	_, err := options.New(makelink.StyleMarkdown, nil, "").MakeLink(context.Background(), "://bad-url")
+	_, err := options.New(makelink.StyleMarkdown, nil, "", false).MakeLink(context.Background(), "://bad-url")
 	if err == nil {
 		t.Error("Context.MakeLink() = nil error, not want nil error.")
 	} else {
